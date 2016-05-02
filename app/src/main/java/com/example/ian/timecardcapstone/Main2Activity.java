@@ -1,5 +1,6 @@
 package com.example.ian.timecardcapstone;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.net.Uri;
@@ -42,8 +43,6 @@ public class Main2Activity extends AppCompatActivity
 
 
 
-
-        // TODO: Create button for clocking in and clocking out, changing text and function based on if you're clocked in or out
         ToggleButton clockInClockOutButton = (ToggleButton) findViewById(R.id.ClockInClockOutid);
         clockInClockOutButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -196,6 +195,7 @@ public class Main2Activity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+
     /*Uri clockIn(DateTime nowDate) {
         ShiftContentValues shiftValues = new ShiftContentValues();
         Integer dayOfMonth = nowDate.getDay();
@@ -292,9 +292,11 @@ public class Main2Activity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
+        Intent intent = new Intent(this, SettingsActivity.class);
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
+            startActivity(intent);
             return true;
         }
 

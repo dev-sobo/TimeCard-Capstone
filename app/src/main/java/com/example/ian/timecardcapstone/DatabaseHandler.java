@@ -1,7 +1,12 @@
 package com.example.ian.timecardcapstone;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.net.Uri;
+import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.example.ian.timecardcapstone.provider.shift.ShiftColumns;
 import com.example.ian.timecardcapstone.provider.shift.ShiftContentValues;
@@ -14,6 +19,8 @@ import hirondelle.date4j.DateTime;
 public class DatabaseHandler {
     private DateTime mNowDate;
     private Context mContext;
+    private static final String LOG_TAG = DatabaseHandler.class.getSimpleName();
+
     DatabaseHandler (Context context){
         mContext = context;
     }
@@ -32,6 +39,10 @@ public class DatabaseHandler {
      * @return The URI at which the clocked in data was inserted in
      */
     public Uri clockIn (DateTime clockInTime) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+
+        Float hourlyPayFloat = Float.valueOf(sharedPreferences.getString(mContext.getResources().getString(R.string.hourlyPay),"11.25"));
+
         ShiftContentValues clockInValues = new ShiftContentValues();
 
         clockInValues.putDayOfMonth(clockInTime.getDay());
@@ -40,10 +51,9 @@ public class DatabaseHandler {
         clockInValues.putMonthName(clockInTime.getMonth().toString());
         clockInValues.putYear(clockInTime.getYear());
         // TODO: Implement a settings menu so the user can put in their hourly pay
-        clockInValues.putHourlyPay(12.66f);
+        clockInValues.putHourlyPay(hourlyPayFloat);
         long unixTime = (System.currentTimeMillis() / 1000);
         clockInValues.putStartTimeUnix((int) unixTime);
-
 
 
         return mContext.getContentResolver().insert(ShiftColumns.CONTENT_URI, clockInValues.values());
@@ -57,9 +67,38 @@ public class DatabaseHandler {
         clockOutValues.putEndTimeUnix((int) unixTime);
         // TODO: calculate number of hours worked and gross pay based on the hourly pay
 
-       return mContext.getContentResolver().update(clockInUri, clockOutValues.values(),null, null);
+        Log.i(LOG_TAG, "CLOCKED IN CONTENT URI: " + clockInUri);
+         mContext.getContentResolver().update(clockInUri, clockOutValues.values(),null, null);
+
+        // TODO: REDO THIS CODE SO ITS CLEANER AND NOT A SLOPPY PIECE OF CRAP
+       Cursor clockedOutCursor =  mContext.getContentResolver().query(clockInUri,
+                new String[]{ShiftColumns.START_TIME_UNIX, ShiftColumns.END_TIME_UNIX, ShiftColumns.HOURLY_PAY},null, null, null);
+        float[] hoursWorkedAndGrossPay = numOfHoursWorked(clockedOutCursor);
+       Log.i(LOG_TAG, "NUMBER OF HOURS REPORTED WORKED FROM CALLED METHOD: " +  hoursWorkedAndGrossPay[0] +
+               "GROSS PAY IN ARRAY: " + hoursWorkedAndGrossPay[1] + " AND QURIED CURSOR: " +
+               DatabaseUtils.dumpCursorToString(clockedOutCursor));
+        ShiftContentValues secondClockOutValues = new ShiftContentValues();
+        secondClockOutValues.putNumHrsShift(hoursWorkedAndGrossPay[0]);
+        secondClockOutValues.putGrossPay(hoursWorkedAndGrossPay[1]);
+       return mContext.getContentResolver().update(clockInUri, secondClockOutValues.values(),null,null);
+        //return numOfRowsUpdated;
     }
 
+    private float[] numOfHoursWorked(Cursor clockedOutCursor) {
+        Log.i(LOG_TAG, "CURSOR BEING WORKED ON: " + DatabaseUtils.dumpCursorToString(clockedOutCursor));
+        clockedOutCursor.moveToFirst();
+        int clockedInUnixTime = clockedOutCursor.getInt(clockedOutCursor.getColumnIndexOrThrow(ShiftColumns.START_TIME_UNIX));
+        int clockedOutUnixTime = clockedOutCursor.getInt(clockedOutCursor.getColumnIndexOrThrow(ShiftColumns.END_TIME_UNIX));
+        float hourlyPay = clockedOutCursor.getFloat(clockedOutCursor.getColumnIndexOrThrow(ShiftColumns.HOURLY_PAY));
+
+        float totalHoursWorked = ((clockedOutUnixTime - clockedInUnixTime)/ 3600f);
+        float calcGrossPay = (hourlyPay * totalHoursWorked);
+        Log.i(LOG_TAG, "TOTAL HOURS WORKED: " + totalHoursWorked);
+        //float[] grossPayAndHoursWorkedArray = {totalHoursWorked, calcGrossPay};
+
+        return new float[] {totalHoursWorked, calcGrossPay};
+
+    }
 
 
   /*  public void clockInTest (Uri clockInUri) {
