@@ -16,7 +16,13 @@ public class RosterAppsData {
     private final String txtPassword = "txtPassword";
     private final String btnLogin = "btnLogin";
     private final String LOG_TAG = RosterAppsData.class.getSimpleName();
+    private String mUserLogin;
+    private String mUserPassword;
 
+    public RosterAppsData(String userLogin, String userPass){
+        mUserLogin = userLogin;
+        mUserPassword = userPass;
+    }
 
 
 }
