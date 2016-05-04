@@ -1,0 +1,38 @@
+{
+  "project_info": {
+    "project_number": "61725760221",
+    "project_id": "default-demo-app-2316"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:61725760221:android:73a4fb8297b2cd4f",
+        "android_client_info": {
+          "package_name": "com.google.samples.quickstart.analytics"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7ewuOLMZ6NNaEIUtjw_2tOBsYNHeOZ0k"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-76396460-2"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
