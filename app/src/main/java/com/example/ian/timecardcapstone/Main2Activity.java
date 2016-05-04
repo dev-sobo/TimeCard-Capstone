@@ -21,6 +21,10 @@ import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
 import com.example.ian.timecardcapstone.provider.shift.ShiftColumns;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 import java.util.TimeZone;
 
@@ -32,18 +36,35 @@ public class Main2Activity extends AppCompatActivity
         private static  Uri mClockInRow;
         private DatabaseHandler databaseHandler;
         private Uri clockedInUri;
+        private Tracker mTracker;
 
-       // DateTime dateTime;
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(LOG_TAG, "SETTING SCREENANME");
+        mTracker.setScreenName("MAIN_ACTIVITY");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
+
+    // DateTime dateTime;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        AdView adView = (AdView) findViewById(R.id.bannerAd);
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("AE6BAFB7E513807BF79058B193822770").build();
+        adView.loadAd(adRequest);
+
+        TimeCardAnalytics app = (TimeCardAnalytics) getApplication();
+        mTracker = app.getDefaultTracker();
+
 
 
 
         ToggleButton clockInClockOutButton = (ToggleButton) findViewById(R.id.ClockInClockOutid);
+        assert clockInClockOutButton != null;
         clockInClockOutButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -177,6 +198,7 @@ public class Main2Activity extends AppCompatActivity
         });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        assert fab != null;
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

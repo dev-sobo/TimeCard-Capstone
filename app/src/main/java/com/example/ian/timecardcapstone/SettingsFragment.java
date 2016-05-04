@@ -53,7 +53,9 @@ public class SettingsFragment extends PreferenceFragment {
             //mParam1 = getArguments().getString(ARG_PARAM1);
             //mParam2 = getArguments().getString(ARG_PARAM2);
         }*/
-    addPreferencesFromResource(R.xml.preferences);
+        addPreferencesFromResource(R.xml.preferences);
+
+
     }
 }
 /*

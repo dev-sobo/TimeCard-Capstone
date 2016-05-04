@@ -11,4 +11,9 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="hourlyPay">hourlyPay</string>
     <string name="defaultHourlyPay">11.25</string>
+    <string name="clockIn">Clock In</string>
+    <string name="clockOut">Clock Out</string>
+    <string name="hourlyPayTitle">Hourly Pay:</string>
+    <string name="hourlyPayContent">Hourly Pay Value</string>
+    <string name="adModUnit">ca-app-pub-3940256099942544/6300978111</string>
 </resources>

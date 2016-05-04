@@ -3,7 +3,8 @@
     <EditTextPreference
         android:key="@string/hourlyPay"
         android:defaultValue="@string/defaultHourlyPay"
-        android:title="Hourly Pay: "
+        android:title="@string/hourlyPayTitle"
+        android:contentDescription="@string/hourlyPayContent"
         />
 
 

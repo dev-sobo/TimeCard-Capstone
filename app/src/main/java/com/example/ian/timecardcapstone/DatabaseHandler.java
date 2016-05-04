@@ -7,6 +7,7 @@ import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.ian.timecardcapstone.provider.shift.ShiftColumns;
 import com.example.ian.timecardcapstone.provider.shift.ShiftContentValues;
@@ -40,8 +41,15 @@ public class DatabaseHandler {
      */
     public Uri clockIn (DateTime clockInTime) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        Float hourlyPayFloat = 11.25f;
+        try {
+             hourlyPayFloat = Float.valueOf(sharedPreferences.getString(mContext.getResources().getString(R.string.hourlyPay),"11.25"));
+        } catch (NumberFormatException exception) {
+            Log.e(LOG_TAG, exception.getMessage());
+            Toast.makeText(mContext, "Hourly pay is in invalid format", Toast.LENGTH_SHORT).show();
+        }
 
-        Float hourlyPayFloat = Float.valueOf(sharedPreferences.getString(mContext.getResources().getString(R.string.hourlyPay),"11.25"));
+
 
         ShiftContentValues clockInValues = new ShiftContentValues();
 
@@ -50,7 +58,6 @@ public class DatabaseHandler {
         clockInValues.putDayOfWeek(clockInTime.getWeekDay().toString());
         clockInValues.putMonthName(clockInTime.getMonth().toString());
         clockInValues.putYear(clockInTime.getYear());
-        // TODO: Implement a settings menu so the user can put in their hourly pay
         clockInValues.putHourlyPay(hourlyPayFloat);
         long unixTime = (System.currentTimeMillis() / 1000);
         clockInValues.putStartTimeUnix((int) unixTime);
