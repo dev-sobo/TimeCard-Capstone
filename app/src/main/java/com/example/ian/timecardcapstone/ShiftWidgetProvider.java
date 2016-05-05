@@ -12,6 +12,8 @@ import android.widget.RemoteViews;
 
 import com.example.ian.timecardcapstone.provider.shift.ShiftColumns;
 
+import java.util.Locale;
+
 /**
  * Created by ian on 5/5/2016.
  */
@@ -66,10 +68,11 @@ public class ShiftWidgetProvider extends AppWidgetProvider {
                 monthNameNumber = String.valueOf(shift.getInt(shift.getColumnIndex(ShiftColumns.MONTH_NAME)));
                 remoteViews.setTextViewText(R.id.monthName, "MONTH NUMBER: " +  monthNameNumber);
 
-                numOfHoursWorked = String.valueOf(shift.getInt(shift.getColumnIndex(ShiftColumns.NUM_HRS_SHIFT)));
+                numOfHoursWorked = String.format(Locale.getDefault(),"%.2f",
+                        shift.getFloat(shift.getColumnIndex(ShiftColumns.NUM_HRS_SHIFT)));
                 remoteViews.setTextViewText(R.id.numOfHoursWorkedInShift, "NUMBER OF HOURS WORKED: " + numOfHoursWorked);
 
-                grossPay = String.valueOf(shift.getInt(shift.getColumnIndex(ShiftColumns.GROSS_PAY)));
+                grossPay = String.format(Locale.getDefault(),"%.2f", shift.getFloat(shift.getColumnIndex(ShiftColumns.GROSS_PAY)));
                 remoteViews.setTextViewText(R.id.grossPay,"$" + grossPay + " GROSS PAY" );
 
 
