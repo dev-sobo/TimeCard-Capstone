@@ -72,7 +72,8 @@ public class ShiftWidgetProvider extends AppWidgetProvider {
                         shift.getFloat(shift.getColumnIndex(ShiftColumns.NUM_HRS_SHIFT)));
                 remoteViews.setTextViewText(R.id.numOfHoursWorkedInShift, "NUMBER OF HOURS WORKED: " + numOfHoursWorked);
 
-                grossPay = String.format(Locale.getDefault(),"%.2f", shift.getFloat(shift.getColumnIndex(ShiftColumns.GROSS_PAY)));
+                grossPay = String.format(Locale.getDefault(),"%.2f" +
+                        "", shift.getFloat(shift.getColumnIndex(ShiftColumns.GROSS_PAY)));
                 remoteViews.setTextViewText(R.id.grossPay,"$" + grossPay + " GROSS PAY" );
 
 
