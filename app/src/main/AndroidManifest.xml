@@ -39,7 +39,7 @@
             android:exported="false" />
 
         <activity android:name=".SettingsActivity" />
-        <activity android:name=".Calender"></activity>
+        <activity android:name=".Calender"/>
     </application>
 
 </manifest>

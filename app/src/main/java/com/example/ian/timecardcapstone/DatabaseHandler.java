@@ -87,8 +87,12 @@ public class DatabaseHandler {
         ShiftContentValues secondClockOutValues = new ShiftContentValues();
         secondClockOutValues.putNumHrsShift(hoursWorkedAndGrossPay[0]);
         secondClockOutValues.putGrossPay(hoursWorkedAndGrossPay[1]);
+
+
        return mContext.getContentResolver().update(clockInUri, secondClockOutValues.values(),null,null);
         //return numOfRowsUpdated;
+
+
     }
 
     private float[] numOfHoursWorked(Cursor clockedOutCursor) {
