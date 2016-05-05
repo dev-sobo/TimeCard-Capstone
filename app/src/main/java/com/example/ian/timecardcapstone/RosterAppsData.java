@@ -24,5 +24,10 @@ public class RosterAppsData {
         mUserPassword = userPass;
     }
 
+    private void connectToRosterapps() {
+
+    }
+
+
 
 }

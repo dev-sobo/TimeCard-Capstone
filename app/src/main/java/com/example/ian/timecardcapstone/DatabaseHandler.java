@@ -108,6 +108,8 @@ public class DatabaseHandler {
     }
 
 
+
+
   /*  public void clockInTest (Uri clockInUri) {
         Cursor clockedInCursor = mContext.getContentResolver().query(clockInUri, null, null, null, null);
 
