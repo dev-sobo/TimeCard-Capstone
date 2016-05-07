@@ -16,4 +16,16 @@
     <string name="hourlyPayTitle">Hourly Pay:</string>
     <string name="hourlyPayContent">Hourly Pay Value</string>
     <string name="adModUnit">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="usericon">userIcon</string>
+    <string name="starttime">startTime</string>
+    <string name="endtime">endTime</string>
+    <string name="dayofweek">dayOfWeek</string>
+    <string name="dayofmonth">dayOfMonth</string>
+    <string name="monthname">monthName</string>
+    <string name="numofhoursworkedinshift">numOfHoursWorkedInShift</string>
+    <string name="grosspay">grossPay</string>
+    <string name="refreshshift">refreshShift</string>
+    <string name="refresh_with_last_clocked_in_shift">Refresh with last clocked-in shift</string>
+    <string name="clock_in_or_out">clockInOrClockOut</string>
+    <string name="ad">advertisement</string>
 </resources>

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.ian.timecardcapstone">
-    
+<manifest package="com.example.ian.timecardcapstone"
+          xmlns:android="http://schemas.android.com/apk/res/android">
+
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-
 
     <application
         android:name=".TimeCardAnalytics"
@@ -13,33 +12,49 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity" />
-        <receiver android:name="ShiftWidgetProvider">
+        <activity android:name=".MainActivity"/>
+
+        <receiver android:name=".ShiftWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
-            <meta-data android:name="android.appwidget.provider"
-                       android:resource="@xml/shift_appwidget_info" />
 
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/shift_appwidget_info"/>
         </receiver>
+
         <activity
             android:name=".Main2Activity"
             android:label="@string/title_activity_main2"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
         <provider
             android:name=".provider.ShiftProvider"
             android:authorities="com.example.ian.timecardcapstone.provider"
-            android:exported="false" />
+            android:exported="false"/>
 
-        <activity android:name=".SettingsActivity" />
+        <activity android:name=".SettingsActivity"/>
         <activity android:name=".Calender"/>
+
+        <service
+            android:name=".authentication.AuthService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator"/>
+"
+        </service>
     </application>
 
 </manifest>
