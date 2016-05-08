@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.ian.timecardcapstone">
-    
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
         android:name=".TimeCardAnalytics"
@@ -14,14 +19,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity" />
-        <receiver android:name="ShiftWidgetProvider">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-            </intent-filter>
-            <meta-data android:name="android.appwidget.provider"
-                       android:resource="@xml/shift_appwidget_info" />
 
+        <receiver android:name=".ShiftWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/shift_appwidget_info" />
         </receiver>
+
         <activity
             android:name=".Main2Activity"
             android:label="@string/title_activity_main2"
@@ -39,7 +47,12 @@
             android:exported="false" />
 
         <activity android:name=".SettingsActivity" />
-        <activity android:name=".Calender"/>
+        <activity android:name=".Calender" />
+        <activity android:name=".auth.LoginActivity" />
+
+        <service
+            android:name=".data.MyIntentService"
+            android:exported="false"></service>
     </application>
 
 </manifest>
