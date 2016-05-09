@@ -17,9 +17,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
+import com.example.ian.timecardcapstone.data.MyIntentService;
 import com.example.ian.timecardcapstone.provider.shift.ShiftColumns;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -60,8 +62,13 @@ public class Main2Activity extends AppCompatActivity
         TimeCardAnalytics app = (TimeCardAnalytics) getApplication();
         mTracker = app.getDefaultTracker();
 
-
-
+        Button button = (Button) findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MyIntentService.startActionkLoginRosterapps(Main2Activity.this, "ian.sobocinski@jetblue.com", "Thisisforthezoos.");
+            }
+        });
 
         ToggleButton clockInClockOutButton = (ToggleButton) findViewById(R.id.ClockInClockOutid);
         assert clockInClockOutButton != null;

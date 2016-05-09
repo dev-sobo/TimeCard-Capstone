@@ -8,6 +8,8 @@ import android.util.Log;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.util.Map;
@@ -99,7 +101,7 @@ public class MyIntentService extends IntentService {
      *
      *
      */
-    private String handleActionRosterappsLogin(String username, String password) {
+    private Document handleActionRosterappsLogin(String username, String password) {
         try {
             Connection.Response loginResponse = Jsoup.connect(rosterappsLogin)
                     .userAgent(userAgent)
@@ -120,9 +122,9 @@ public class MyIntentService extends IntentService {
                     .userAgent(userAgent)
                     .cookies(loginCookie)
                     .execute().parse();
-            System.out.print(calendarDocument.html());
+           // System.out.print(calendarDocument.html());
 
-            return calendarDocument.html();
+            return calendarDocument;
         } catch (IOException exception) {
             Log.e(LOG_TAG, "EXCEPTION ERROR: " + exception);
         }
@@ -130,10 +132,90 @@ public class MyIntentService extends IntentService {
       return null;
     }
 
-    private void organizeShiftHTMLData(String HTML) {
+    private void organizeShiftHTMLData(Document calenderHTML) {
+        if (calenderHTML != null) {
+            Elements entireMonth = calenderHTML.getElementsByClass("week");
 
+            for (int weekIndex = 0; weekIndex < entireMonth.size(); weekIndex++) {
+                Element singleWeek = entireMonth.get(weekIndex);
+                Log.i(LOG_TAG, singleWeek.toString());
+                Elements days = singleWeek.getElementsByTag("td");
+                for (int dayIndex = 0; dayIndex < days.size(); dayIndex++) {
+                    Element singleDay = days.get(dayIndex);
+                    Log.e(LOG_TAG, singleDay.text());
+                    Log.i(LOG_TAG, singleDay.toString());
+                    Elements shiftsInDay = singleDay.getElementsByTag("div");
+                    Log.i(LOG_TAG, shiftsInDay.toString());
+                    Log.e(LOG_TAG, shiftsInDay.text());
+                    for (int shiftIndex = 0; shiftIndex < shiftsInDay.size(); shiftIndex++){
+                        Element singleShift =  shiftsInDay.get(shiftIndex);
+                        String attr = singleShift.attr("onmouseover");
+                        Log.e(LOG_TAG, attr);
+                        String lengthOfShift = attr.substring((attr.indexOf("hr")) - 2);
+
+                        Log.e(LOG_TAG, "LENGTH OF SHIFT: " + lengthOfShift);
+
+                    }
+
+
+                }
+                //Log.i(LOG_TAG, shifts.toString());
+                /*for (int dayIndex = 0; dayIndex < singleWeek.childNodeSize(); dayIndex++) {
+
+                    Log.i(LOG_TAG, shifts.toString());
+                }
+*/
+
+            }
+        }
 
     }
+
+   /* private void organizeShiftHTMLData(Document calenderHTML) {
+        if(calenderHTML != null) {
+            Elements monthElements = calenderHTML.getElementsByClass("week");
+
+            for (int i = 0; i < monthElements.size(); i++) {
+                Elements week = monthElements.get(i).getElementsByTag("td");
+                Element day = week.get(i);
+                Log.i(LOG_TAG, "DAY: " + day.toString());
+                Elements shifts = day.getElementsByTag("div");
+                for (int k = 0; k < shifts.size(); k++) {
+                    Element shift = shifts.get(k);
+                    Log.i(LOG_TAG, "SHIFT: " + shift);
+                    String shiftLength = shift.attr("onmouseover");
+                    Log.i(LOG_TAG, "SHIFT LENGTH: " + shiftLength);
+
+
+                }
+                //Log.i(LOG_TAG, "SHIFT DATA: " + shiftData);
+           *//* for (int shift = 0; shift < shifts.size(); shift++){
+                Log.i(LOG_TAG, "SHIFT " + shift +": \n" + shifts.get(i) + "ON DAY: " + i);
+            }*//*
+            }
+*//*
+
+        Log.i(LOG_TAG, "WEEK ELEMENTS: " + monthElements);
+        Log.i(LOG_TAG, "ALL ATTRS of week 1: " + monthElements.get(0).attributes());
+        Log.i(LOG_TAG, "ID OF week 1" + monthElements.get(0).id());
+        Log.i(LOG_TAG, "TEXT OF WEEK 1"  + monthElements.get(0).text());
+        Log.i(LOG_TAG, "DATA OF WEEK 1" + monthElements.get(0).data());
+        Log.i(LOG_TAG, "TAG NAME: "  + monthElements.get(0).tagName());
+       // Log.i(LOG_TAG, "elements containing HRS: " + monthElements.get(0).getElementsByAttributeValueContaining("onmouseover", "hrs"));
+        Elements onmouseoverAttr = monthElements.get(0).getElementsByAttribute("onmouseover");
+        Log.i(LOG_TAG, "onmouseover attr: " + onmouseoverAttr);
+        for (int i = 0; i < onmouseoverAttr.size(); i++) {
+            Element individualShift = onmouseoverAttr.get(i);
+            String typeOfShift = individualShift.attr("class");
+            Log.i(LOG_TAG, "TYPE OF SHIFT: " + typeOfShift + "\n");
+            String lengthOfShift = individualShift.attr("onmouseover");
+            Log.i(LOG_TAG, "LENGTH OF SHIFT: " + lengthOfShift + "\n" );
+        }
+*//*
+        } else {
+            Log.e(LOG_TAG, "CALENDER HTML WAS NULL. CANNOT DO ANYTHING");
+        }
+    }*/
 
     /**
      * Handle action Baz in the provided background thread with the provided
