@@ -12,6 +12,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -133,29 +134,40 @@ public class MyIntentService extends IntentService {
     }
 
     private void organizeShiftHTMLData(Document calenderHTML) {
+        String shiftDay;
+        ArrayList<String> listOfShiftTypes = new ArrayList<>();
         if (calenderHTML != null) {
             Elements entireMonth = calenderHTML.getElementsByClass("week");
 
             for (int weekIndex = 0; weekIndex < entireMonth.size(); weekIndex++) {
                 Element singleWeek = entireMonth.get(weekIndex);
-                Log.i(LOG_TAG, singleWeek.toString());
+                //Log.i(LOG_TAG, singleWeek.toString());
                 Elements days = singleWeek.getElementsByTag("td");
+
                 for (int dayIndex = 0; dayIndex < days.size(); dayIndex++) {
+
                     Element singleDay = days.get(dayIndex);
-                    Log.e(LOG_TAG, singleDay.text());
-                    Log.i(LOG_TAG, singleDay.toString());
+                    Log.e(LOG_TAG,"ENTIRE DAY: " +  singleDay.text());
+                    String dayOfShifts = singleDay.text();
+                    listOfShiftTypes.add(dayOfShifts);
+                   // Log.i(LOG_TAG,  singleDay.toString());
+                    //+ " TYPE OF SHIFT: " +  singleDay.getElementsByTag("div").attr("class")
+
                     Elements shiftsInDay = singleDay.getElementsByTag("div");
-                    Log.i(LOG_TAG, shiftsInDay.toString());
-                    Log.e(LOG_TAG, shiftsInDay.text());
-                    for (int shiftIndex = 0; shiftIndex < shiftsInDay.size(); shiftIndex++){
+                    //Log.i(LOG_TAG, shiftsInDay.toString());
+                    //Log.i(LOG_TAG, "SHIFTS IN DAY: " + shiftsInDay.text());
+                    Log.i(LOG_TAG, listOfShiftTypes.toString());
+
+                /*    for (int shiftIndex = 0; shiftIndex < shiftsInDay.size(); shiftIndex++) {
                         Element singleShift =  shiftsInDay.get(shiftIndex);
-                        String attr = singleShift.attr("onmouseover");
-                        Log.e(LOG_TAG, attr);
-                        String lengthOfShift = attr.substring((attr.indexOf("hr")) - 2);
 
-                        Log.e(LOG_TAG, "LENGTH OF SHIFT: " + lengthOfShift);
+                        String typeOfShift = singleShift.attr("class");
 
-                    }
+                        listOfShiftTypes.add(typeOfShift);
+                        Log.i(LOG_TAG, listOfShiftTypes.toString());
+
+
+                    }*/
 
 
                 }
