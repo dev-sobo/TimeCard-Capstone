@@ -158,7 +158,7 @@ public class MyIntentService extends IntentService {
                     //Log.i(LOG_TAG, "SHIFTS IN DAY: " + shiftsInDay.text());
                     Log.i(LOG_TAG, listOfShiftTypes.toString());
 
-                /*    for (int shiftIndex = 0; shiftIndex < shiftsInDay.size(); shiftIndex++) {
+                    for (int shiftIndex = 0; shiftIndex < shiftsInDay.size(); shiftIndex++) {
                         Element singleShift =  shiftsInDay.get(shiftIndex);
 
                         String typeOfShift = singleShift.attr("class");
@@ -167,7 +167,7 @@ public class MyIntentService extends IntentService {
                         Log.i(LOG_TAG, listOfShiftTypes.toString());
 
 
-                    }*/
+                    }
 
 
                 }
