@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
+import com.example.ian.timecardcapstone.calender.CalenderActivity;
 import com.example.ian.timecardcapstone.data.MyIntentService;
 import com.example.ian.timecardcapstone.provider.shift.ShiftColumns;
 import com.google.android.gms.ads.AdRequest;
@@ -337,10 +338,12 @@ public class Main2Activity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        Intent startCalendarActivity = new Intent(this, CalenderActivity.class);
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
+            startActivity(startCalendarActivity);
 
         } else if (id == R.id.nav_slideshow) {
 
