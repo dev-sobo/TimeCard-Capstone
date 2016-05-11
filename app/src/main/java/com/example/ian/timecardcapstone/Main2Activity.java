@@ -21,7 +21,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
-import com.example.ian.timecardcapstone.calender.CalenderActivity;
+import com.example.ian.timecardcapstone.calender.ShiftCalendar;
 import com.example.ian.timecardcapstone.data.MyIntentService;
 import com.example.ian.timecardcapstone.provider.shift.ShiftColumns;
 import com.google.android.gms.ads.AdRequest;
@@ -283,6 +283,7 @@ public class Main2Activity extends AppCompatActivity
     }*/
 
     String getCurrentHoursAndMinutes() {
+
         DateTime currentTime = DateTime.now(TimeZone.getDefault());
         Integer currentHour = currentTime.getHour();
         Integer currentMinutes = currentTime.getMinute();
@@ -338,7 +339,7 @@ public class Main2Activity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        Intent startCalendarActivity = new Intent(this, CalenderActivity.class);
+        Intent startCalendarActivity = new Intent(this, ShiftCalendar.class);
 
         if (id == R.id.nav_camera) {
             // Handle the camera action

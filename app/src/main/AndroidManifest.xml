@@ -52,7 +52,7 @@
             android:name=".data.MyIntentService"
             android:exported="false" />
 
-        <activity android:name=".calender.CalenderActivity"></activity>
+        <activity android:name=".calender.ShiftCalendar"></activity>
     </application>
 
 </manifest>
