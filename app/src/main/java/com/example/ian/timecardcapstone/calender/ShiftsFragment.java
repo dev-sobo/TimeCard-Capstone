@@ -21,6 +21,7 @@ public class ShiftsFragment extends CaldroidFragment implements LoaderManager.Lo
     private static final String LOG_TAG = CaldroidFragment.class.getSimpleName();
     public static  String CURSOR_EXTRA = "cursor_extra";
     private CalendarGridAdapter mCalendarGridAdapter;
+    private CursorLoadedListener<Cursor> mCursorLoadedListener;
 
 
     @Override
@@ -28,6 +29,7 @@ public class ShiftsFragment extends CaldroidFragment implements LoaderManager.Lo
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
         getLoaderManager().initLoader(LOADER_ID, null, this);
+
 
 
 
@@ -49,9 +51,18 @@ public class ShiftsFragment extends CaldroidFragment implements LoaderManager.Lo
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         Log.e(LOG_TAG, "LOADER DATA: " + DatabaseUtils.dumpCursorToString(data));
-        extraData.put(CURSOR_EXTRA, data);
-        refreshView();
+       /* extraData.put(CURSOR_EXTRA, data);
+        refreshView();*/
+        if (data.moveToFirst()) {
+            //data.moveToLast();
+//data.getInt(data.getColumnIndex(ShiftColumns.MONTH_NAME)
+          //  data.getInt(data.getColumnIndex(ShiftColumns.YEAR))
+            int month = Integer.parseInt(data.getString(data.getColumnIndex(ShiftColumns.MONTH_NAME)));
+            //int year = data.getInt(data.getColumnIndex(ShiftColumns.YEAR));
+            mCursorLoadedListener = (CursorLoadedListener<Cursor>) getNewDatesGridAdapter(month, 2016);
+            mCursorLoadedListener.onCursorLoaded(data);
 
+        }
 
 
     }
@@ -63,6 +74,14 @@ public class ShiftsFragment extends CaldroidFragment implements LoaderManager.Lo
     @Override
     public CaldroidGridAdapter getNewDatesGridAdapter(int month, int year) {
         return new CalendarGridAdapter(getActivity(), month, year, getCaldroidData(), extraData);
+    }
+
+    public interface CursorLoadedListener<Cursor> {
+        void onCursorLoaded(Cursor cursor);
+    }
+
+    public void setCursorLoadedListener(CursorLoadedListener<Cursor> listener) {
+        mCursorLoadedListener = listener;
     }
 
 }
