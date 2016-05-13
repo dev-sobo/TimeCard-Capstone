@@ -2,85 +2,96 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+                android:focusable="true"
+            >
 
     <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="refreshShift"
+        android:text="@string/refreshshift"
         android:id="@+id/refreshShiftButton"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:focusable="true"
+        android:contentDescription="@string/refresh_with_last_clocked_in_shift"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="startTime"
+        android:text="@string/starttime"
         android:id="@+id/startTime"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:contentDescription="@string/starttime"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="endTime"
+        android:text="@string/endtime"
         android:id="@+id/endTime"
         android:layout_below="@+id/startTime"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:contentDescription="@string/endtime"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="dayOfWeek"
+        android:text="@string/dayofweek"
         android:id="@+id/dayOfWeek"
         android:layout_below="@+id/endTime"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:contentDescription="@string/dayofweek"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="dayOfMonth"
+        android:text="@string/dayofmonth"
         android:id="@+id/dayOfMonth"
         android:layout_below="@+id/dayOfWeek"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:contentDescription="@string/dayofmonth"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="monthName"
+        android:text="@string/monthname"
         android:id="@+id/monthName"
         android:layout_below="@+id/dayOfMonth"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:contentDescription="@string/monthname"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="numOfHoursWorkedInShift"
+        android:text="@string/numofhoursworkedinshift"
         android:id="@+id/numOfHoursWorkedInShift"
         android:layout_below="@+id/monthName"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:contentDescription="@string/numofhoursworkedinshift"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="grossPay"
+        android:text="@string/grosspay"
         android:id="@+id/grossPay"
         android:layout_below="@+id/numOfHoursWorkedInShift"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
+        android:layout_alignParentStart="true"
+        android:contentDescription="@string/grosspay"/>
 
 </RelativeLayout>

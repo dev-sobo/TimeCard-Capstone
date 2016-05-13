@@ -5,6 +5,7 @@
         android:defaultValue="@string/defaultHourlyPay"
         android:title="@string/hourlyPayTitle"
         android:contentDescription="@string/hourlyPayContent"
+        android:focusable="true"
         />
 
 

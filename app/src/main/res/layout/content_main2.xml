@@ -21,7 +21,9 @@
         android:textOn="@string/clockOut"
         android:enabled="true"
         android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:focusable="true"
+        android:contentDescription="@string/clock_in_or_out"/>
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/bannerAd"
@@ -31,6 +33,8 @@
         android:layout_alignParentBottom="true"
         ads:adSize="BANNER"
         ads:adUnitId="@string/adModUnit"
+        android:focusable="true"
+        android:contentDescription="@string/ad"
         />
 
     <Button
