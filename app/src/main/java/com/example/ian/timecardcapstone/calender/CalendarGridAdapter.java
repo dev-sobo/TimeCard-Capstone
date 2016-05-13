@@ -3,6 +3,8 @@ package com.example.ian.timecardcapstone.calender;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,11 +28,15 @@ public class CalendarGridAdapter extends CaldroidGridAdapter implements ShiftsFr
                                Map<String, Object> extraData) {
         super(context, month, year, caldroidData, extraData);
         mContext = context;
+        mCursor = mContext.getContentResolver().query(ShiftColumns.CONTENT_URI,   new String[] {ShiftColumns.START_TIME_HHMM, ShiftColumns.END_TIME_HHMM, ShiftColumns.DAY_OF_MONTH,
+                ShiftColumns.MONTH_NAME, ShiftColumns.NUM_HRS_SHIFT, ShiftColumns.GROSS_PAY}, null, null, null);
+
 
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
         LayoutInflater inflater = (LayoutInflater) context.
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View cellView = convertView;
@@ -45,16 +51,23 @@ public class CalendarGridAdapter extends CaldroidGridAdapter implements ShiftsFr
 
         DateTime dateTime = this.datetimeList.get(position);
         Resources resources = context.getResources();
-
-        dateTextView.setText(dateTime.getDay().toString());
+        if (mCursor == null) {
+            dateTextView.setText(dateTime.getDay().toString());
             shiftDataText.setText("");
-
+        }
 
 
 
         if (dateTime.getMonth() != month) {
             dateTextView.setTextColor(resources.getColor(R.color.caldroid_darker_gray));
             cellView.setBackgroundColor(resources.getColor(R.color.caldroid_gray));
+        }
+        if (mCursor!= null) {
+            if (mCursor.moveToFirst()) {
+                dateTextView.setText(dateTime.getDay().toString());
+               // shiftDataText.setText(Float.toString(mCursor.getFloat(mCursor.getColumnIndex(ShiftColumns.GROSS_PAY))));
+                shiftDataText.setText(mCursor.getString(mCursor.getColumnIndex(ShiftColumns.START_TIME_HHMM)));
+            }
         }
 
         //shiftDataText.setText("this is a really long sentence to see what happens when something super long is on here");
@@ -78,16 +91,18 @@ public class CalendarGridAdapter extends CaldroidGridAdapter implements ShiftsFr
 
     @Override
     public void onCursorLoaded(Cursor cursor) {
+        mCursor = cursor;
         cursor.moveToFirst();
         String start_time = cursor.getString(cursor.getColumnIndex(ShiftColumns.START_TIME_HHMM));
         String end_time = cursor.getString(cursor.getColumnIndex(ShiftColumns.END_TIME_HHMM));
         LayoutInflater inflater = (LayoutInflater) context.
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-
         View cellView =  inflater.inflate(R.layout.cellview, null);
         TextView shiftDataText = (TextView) cellView.findViewById(R.id.shiftDataText);
         shiftDataText.setText(start_time + "     " + end_time);
+        Log.e(LOG_TAG, "CURSOR: " + DatabaseUtils.dumpCursorToString(cursor));
+        notifyDataSetChanged();
     }
 
 }

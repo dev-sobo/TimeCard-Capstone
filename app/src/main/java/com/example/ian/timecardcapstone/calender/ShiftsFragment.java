@@ -20,7 +20,6 @@ public class ShiftsFragment extends CaldroidFragment implements LoaderManager.Lo
     private static final int LOADER_ID = 1;
     private static final String LOG_TAG = CaldroidFragment.class.getSimpleName();
     public static  String CURSOR_EXTRA = "cursor_extra";
-    private CalendarGridAdapter mCalendarGridAdapter;
     private CursorLoadedListener<Cursor> mCursorLoadedListener;
 
 
@@ -57,14 +56,13 @@ public class ShiftsFragment extends CaldroidFragment implements LoaderManager.Lo
             //data.moveToLast();
 //data.getInt(data.getColumnIndex(ShiftColumns.MONTH_NAME)
           //  data.getInt(data.getColumnIndex(ShiftColumns.YEAR))
-            int month = Integer.parseInt(data.getString(data.getColumnIndex(ShiftColumns.MONTH_NAME)));
+           // int month = Integer.parseInt(data.getString(data.getColumnIndex(ShiftColumns.MONTH_NAME)));
             //int year = data.getInt(data.getColumnIndex(ShiftColumns.YEAR));
-            mCursorLoadedListener = (CursorLoadedListener<Cursor>) getNewDatesGridAdapter(month, 2016);
+            mCursorLoadedListener = (CursorLoadedListener<Cursor>) getNewDatesGridAdapter(getMonth(), 2016);
             mCursorLoadedListener.onCursorLoaded(data);
-
         }
 
-
+    refreshView();
     }
 
     @Override
@@ -73,8 +71,18 @@ public class ShiftsFragment extends CaldroidFragment implements LoaderManager.Lo
     }
     @Override
     public CaldroidGridAdapter getNewDatesGridAdapter(int month, int year) {
-        return new CalendarGridAdapter(getActivity(), month, year, getCaldroidData(), extraData);
-    }
+        CalendarGridAdapter calendarGridAdapter = new CalendarGridAdapter(getActivity(), month, year, getCaldroidData(), extraData);
+       /* synchronized (mCalendarGridAdapter) {
+            try {
+                //mCalendarGridAdapter.wait();
+                return mCalendarGridAdapter;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }*/
+
+            return calendarGridAdapter;
+        }
+
 
     public interface CursorLoadedListener<Cursor> {
         void onCursorLoaded(Cursor cursor);
