@@ -27,8 +27,8 @@ public class ShiftsFragment extends CaldroidFragment implements LoaderManager.Lo
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
 
-        getLoaderManager().initLoader(LOADER_ID, null, this);
 
+        getLoaderManager().initLoader(LOADER_ID, null, this);
 
 
 

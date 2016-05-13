@@ -3,7 +3,6 @@ package com.example.ian.timecardcapstone.calender;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,13 +46,17 @@ public class CalendarGridAdapter extends CaldroidGridAdapter implements ShiftsFr
         }
 
         TextView dateTextView = (TextView) cellView.findViewById(R.id.dateText);
-        TextView shiftDataText = (TextView) cellView.findViewById(R.id.shiftDataText);
+        TextView startTimeText = (TextView) cellView.findViewById(R.id.startTimeText);
+        TextView endTimeText = (TextView) cellView.findViewById(R.id.endTimeText);
+        TextView numHoursWrkedText = (TextView) cellView.findViewById(R.id.numOfHoursWorkedText);
+        TextView grossPayText = (TextView) cellView.findViewById(R.id.grossPayText);
+
 
         DateTime dateTime = this.datetimeList.get(position);
         Resources resources = context.getResources();
         if (mCursor == null) {
             dateTextView.setText(dateTime.getDay().toString());
-            shiftDataText.setText("");
+            startTimeText.setText("");
         }
 
 
@@ -64,13 +67,20 @@ public class CalendarGridAdapter extends CaldroidGridAdapter implements ShiftsFr
         }
         if (mCursor!= null) {
             if (mCursor.moveToFirst()) {
-                dateTextView.setText(dateTime.getDay().toString());
-               // shiftDataText.setText(Float.toString(mCursor.getFloat(mCursor.getColumnIndex(ShiftColumns.GROSS_PAY))));
-                shiftDataText.setText(mCursor.getString(mCursor.getColumnIndex(ShiftColumns.START_TIME_HHMM)));
+                int cursorToday = mCursor.getInt(mCursor.getColumnIndex(ShiftColumns.DAY_OF_MONTH));
+                Log.e(LOG_TAG, "TODAY: " + getToday().getDay());
+                if (cursorToday == dateTime.getDay()) {
+                    dateTextView.setText(dateTime.getDay().toString());
+                    // startTimeText.setText(Float.toString(mCursor.getFloat(mCursor.getColumnIndex(ShiftColumns.GROSS_PAY))));
+                    startTimeText.setText(mCursor.getString(mCursor.getColumnIndex(ShiftColumns.START_TIME_HHMM)));
+                    endTimeText.setText(mCursor.getString(mCursor.getColumnIndex(ShiftColumns.END_TIME_HHMM)));
+                    numHoursWrkedText.setText(mCursor.getString(mCursor.getColumnIndex(ShiftColumns.NUM_HRS_SHIFT)));
+                    grossPayText.setText(mCursor.getString(mCursor.getColumnIndex(ShiftColumns.GROSS_PAY)));
+                }
             }
         }
 
-        //shiftDataText.setText("this is a really long sentence to see what happens when something super long is on here");
+        //startTimeText.setText("this is a really long sentence to see what happens when something super long is on here");
 
         return cellView;
     }
@@ -91,7 +101,7 @@ public class CalendarGridAdapter extends CaldroidGridAdapter implements ShiftsFr
 
     @Override
     public void onCursorLoaded(Cursor cursor) {
-        mCursor = cursor;
+      /*  mCursor = cursor;
         cursor.moveToFirst();
         String start_time = cursor.getString(cursor.getColumnIndex(ShiftColumns.START_TIME_HHMM));
         String end_time = cursor.getString(cursor.getColumnIndex(ShiftColumns.END_TIME_HHMM));
@@ -102,7 +112,7 @@ public class CalendarGridAdapter extends CaldroidGridAdapter implements ShiftsFr
         TextView shiftDataText = (TextView) cellView.findViewById(R.id.shiftDataText);
         shiftDataText.setText(start_time + "     " + end_time);
         Log.e(LOG_TAG, "CURSOR: " + DatabaseUtils.dumpCursorToString(cursor));
-        notifyDataSetChanged();
+        notifyDataSetChanged();*/
     }
 
 }

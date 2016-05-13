@@ -43,5 +43,45 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="61dp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/currentShiftStart"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/currentShiftEnd"
+        android:layout_below="@+id/currentShiftStart"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/currentShiftDate"
+        android:layout_below="@+id/currentShiftEnd"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/currentShiftHrsWrked"
+        android:layout_below="@+id/currentShiftDate"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/currentShiftGrossPay"
+        android:layout_below="@+id/currentShiftHrsWrked"
+        android:layout_centerHorizontal="true"/>
+
 
 </RelativeLayout>

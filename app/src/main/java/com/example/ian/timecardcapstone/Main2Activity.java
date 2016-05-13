@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -19,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.example.ian.timecardcapstone.calender.ShiftCalendar;
@@ -34,12 +38,18 @@ import java.util.TimeZone;
 import hirondelle.date4j.DateTime;
 
 public class Main2Activity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements LoaderManager.LoaderCallbacks<Cursor>, NavigationView.OnNavigationItemSelectedListener   {
         private static final String LOG_TAG = Main2Activity.class.getSimpleName();
         private static  Uri mClockInRow;
         private DatabaseHandler databaseHandler;
         private Uri clockedInUri;
         private Tracker mTracker;
+        private static final int MAIN_ACT_LOADER_ID = 2;
+    private TextView currentShiftStart;
+    private TextView currentShiftEnd;
+    private TextView currentShiftDate;
+    private TextView currentShiftHrsWrked;
+    private TextView currentShiftGrossPay;
 
     @Override
     protected void onResume() {
@@ -57,7 +67,7 @@ public class Main2Activity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         AdView adView = (AdView) findViewById(R.id.bannerAd);
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice("AE6BAFB7E513807BF79058B193822770").build();
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("89C1C45775C35F9B96807A0DD84FAA1D").build();
         adView.loadAd(adRequest);
 
         TimeCardAnalytics app = (TimeCardAnalytics) getApplication();
@@ -70,6 +80,11 @@ public class Main2Activity extends AppCompatActivity
                 MyIntentService.startActionkLoginRosterapps(Main2Activity.this, "ian.sobocinski@jetblue.com", "Thisisforthezoos.");
             }
         });
+        currentShiftStart = (TextView)findViewById(R.id.currentShiftStart);
+        currentShiftEnd = (TextView)findViewById(R.id.currentShiftEnd);
+        currentShiftDate = (TextView)findViewById(R.id.currentShiftDate);
+        currentShiftHrsWrked = (TextView)findViewById(R.id.currentShiftHrsWrked);
+        currentShiftGrossPay = (TextView)findViewById(R.id.currentShiftGrossPay);
 
         ToggleButton clockInClockOutButton = (ToggleButton) findViewById(R.id.ClockInClockOutid);
         assert clockInClockOutButton != null;
@@ -81,57 +96,7 @@ public class Main2Activity extends AppCompatActivity
                     databaseHandler = new DatabaseHandler(getApplicationContext());
 
                     clockedInUri = databaseHandler.clockIn(DateTime.now(TimeZone.getDefault()));
-                    Cursor returnedClockedInCursor = getContentResolver().query(clockedInUri, null,
-                            null, null, null);
-
-                    if(returnedClockedInCursor != null) {
-                        returnedClockedInCursor.moveToFirst();
-                        /*String[] columnNames = returnedClockedInCursor.getColumnNames();
-                        for(int i = 0; i < columnNames.length; i++) {
-                            Log.i(LOG_TAG, "COLUMN NAME: " + columnNames[i]);
-                        }
-                        Log.i(LOG_TAG, "NUMBER OF ROWS REPORTED FROM RETURNED URI: " +  returnedClockedInCursor.getCount());
-                        Log.i(LOG_TAG, "COLUMN INDEX FOR NAME: " + returnedClockedInCursor.getColumnIndex("start_time_unix"));
-                        Log.i(LOG_TAG, "COLUMN INFORMATION: " + returnedClockedInCursor.getString(3));*/
-                        Log.i(LOG_TAG, "INITAITALLY CLOCKED IN CURSOR: " + DatabaseUtils.dumpCursorToString(returnedClockedInCursor));
-
-
-                        returnedClockedInCursor.close();
-                    }
-
-                    Cursor entireTableCursor = getContentResolver().query(ShiftColumns.CONTENT_URI,
-                            null, null, null, null);
-
-                    if (entireTableCursor != null) {
-                        entireTableCursor.moveToFirst();
-                        /*Log.i(LOG_TAG, "NUMBER OF ROWS REPORTED FOR THE ENTIRE TABLE: " + entireTableCursor.getCount());
-                        String[] columnNames = entireTableCursor.getColumnNames();
-                        Log.i(LOG_TAG, "COLUMN ARRAY LENGTH: " + columnNames.length);
-                        for(int i = 0; i < entireTableCursor.getCount(); i++) {
-                            Log.i(LOG_TAG, "Row number: " + i);
-                            for (int k = 0; k < columnNames.length; k++) {
-                                Log.i(LOG_TAG, "COLUMN INDEX IN FOR LOOP: " + entireTableCursor.getColumnName(k));
-                               *//* Log.i(LOG_TAG, "start_time_hhmm COLUMN CONTENTS: " + entireTableCursor.getString(1));
-                                Log.i(LOG_TAG, "end_time_hhmm COLUMN CONTENTS: " + entireTableCursor.getString(2));*//*
-                            }
-                            Log.i(LOG_TAG, "CLOCKING IN start_time_hhmm COLUMN CONTENTS: " + entireTableCursor.getString(1));
-                            Log.i(LOG_TAG, "CLOCKING IN start_time_unix COLUMN CONTENTS: " + entireTableCursor.getInt(3));
-
-                            entireTableCursor.moveToNext();
-                        }
-
-                        //Log.i(LOG_TAG, "COLUMN IN ENTIRE TABLE: " + entireTableCursor.getString(3));*/
-                        Log.i(LOG_TAG, "ENTIRE TABLE CURSOR DUMP: " + DatabaseUtils.dumpCursorToString(entireTableCursor));
-                        entireTableCursor.close();
-                    }
-
-
-                    /*Log.i(LOG_TAG, "IS CLOCKED IN");
-                    // TODO: Record time clocked in, store into the database
-                    DateTime nowDate = DateTime.now(TimeZone.getDefault());
-                    Log.i(LOG_TAG, "CURRENT DAY : " +  nowDate.getDay() + " CURRENT MONTH: " + nowDate.getMonth()
-                            + " CURRENT HOUR: " + nowDate.getHour() + " weekday: " + nowDate.getWeekDay() + " YEAR: " + nowDate.getYear());
-                    mClockInRow = clockIn(nowDate);*/
+                    getSupportLoaderManager().initLoader(MAIN_ACT_LOADER_ID,null, Main2Activity.this);
 
 
                 } else if (b == false) {
@@ -153,52 +118,11 @@ public class Main2Activity extends AppCompatActivity
                     if (entireTable != null) {
                         entireTable.moveToFirst();
                         Log.i(LOG_TAG, "ENTIRE CLOCKED OUT TABLE CURSOR: " + DatabaseUtils.dumpCursorToString(entireTable));
-                        /*String[] columnNames = entireTable.getColumnNames();
-                        for (int i = 0; i < entireTable.getCount(); i++) {
-                            Log.i(LOG_TAG, "ROW NUMBER: " + i + "CLOCKING OUT END TIME HHMM: " + entireTable.getString(2));
-                            Log.i(LOG_TAG, "CLOCKING OUT END TIME UNIX: " + entireTable.getInt(4));
-                            entireTable.moveToNext();
-                        }*/
+
                         entireTable.close();
                     }
 
 
-
-
-                    /*// TODO: Record time clocked out, store into the database
-                    ShiftSelection selection = new ShiftSelection();
-                    selection.dayOfMonth(27);
-                    Cursor cursor = getContentResolver().query(ShiftColumns.CONTENT_URI, null,
-                           null, null, null);
-                    if (cursor != null) {
-                        cursor.moveToLast();
-                        ShiftCursor clockedInCursor = new ShiftCursor(cursor);
-                        Integer dayOfMonth = clockedInCursor.getDayOfMonth();
-                        Log.i(LOG_TAG, "dayofmonth: " + dayOfMonth);
-
-                        Log.i(LOG_TAG, "Number of rows in cursor: " + clockedInCursor.getCount());
-
-                        Integer startTimeUnix = clockedInCursor.getStartTimeUnix();
-                        Log.i(LOG_TAG, "CLOCKED OUT UNIX time: " + startTimeUnix);
-                        //  Log.i(LOG_TAG, "CURRENT TIME: " +  getCurrentHoursAndMinutes());
-
-                        cursor.close();
-
-                    }
-                    Uri clockedOutUri =  clockOut(mClockInRow);
-                    Cursor clockedOutCursor = getContentResolver().query(clockedOutUri, null, null,
-                            null, null);
-                    if (clockedOutCursor != null) {
-                        clockedOutCursor.moveToLast();
-                        ShiftCursor clockedOut = new ShiftCursor(clockedOutCursor);
-                        Integer startTimeUnix = clockedOut.getEndTimeUnix();
-                        Log.i(LOG_TAG, "START TIME UNIX, CLOCKED OUT: " + startTimeUnix);
-
-                        Integer endTimeUnix = clockedOut.getEndTimeUnix();
-                        Log.i(LOG_TAG, "END TIME UNIX, CLOCKED OUT: " + endTimeUnix);
-
-                    }
-                    clockOut(mClockInRow);*/
 
 
                 }
@@ -226,61 +150,45 @@ public class Main2Activity extends AppCompatActivity
     }
 
 
-    /*Uri clockIn(DateTime nowDate) {
-        ShiftContentValues shiftValues = new ShiftContentValues();
-        Integer dayOfMonth = nowDate.getDay();
-        shiftValues.putDayOfMonth(dayOfMonth);
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        if (id == MAIN_ACT_LOADER_ID) {
+            CursorLoader shiftsLoader = new CursorLoader(this, ShiftColumns.CONTENT_URI, new String[] {ShiftColumns.START_TIME_HHMM,
+                    ShiftColumns.END_TIME_HHMM, ShiftColumns.DAY_OF_WEEK,
+                    ShiftColumns.DAY_OF_MONTH, ShiftColumns.MONTH_NAME, ShiftColumns.YEAR,
+                    ShiftColumns.NUM_HRS_SHIFT, ShiftColumns.GROSS_PAY},null, null, null);
+            return shiftsLoader;
+        }
+        return null;
+    }
 
-        char[] stringArray = new char[2];
-        String nowString = nowDate.format("hh:mm");
-        shiftValues.putStartTimeHhmm(nowString);
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if (data != null && data.moveToLast()) {
+            data.moveToLast();
+            currentShiftStart.setText(getString(R.string.clockInTimeText) + data.getString(data.getColumnIndex(ShiftColumns.START_TIME_HHMM)));
+            currentShiftEnd.setText( getString(R.string.clockOutTimeText) + data.getString(data.getColumnIndex(ShiftColumns.END_TIME_HHMM)));
+            int month = data.getInt(data.getColumnIndex(ShiftColumns.MONTH_NAME));
+            int monthDay = data.getInt(data.getColumnIndex(ShiftColumns.DAY_OF_MONTH));
+            int year =  data.getInt(data.getColumnIndex(ShiftColumns.YEAR));
+            String date =  month + "/" + monthDay
+                     + "/" + year;
+            currentShiftDate.setText(date);
 
-        Date date = new Date();
-        long unixTime =  (date.getTime() / 1000);
-        shiftValues.putStartTimeUnix((int) unixTime);
-        Log.i(LOG_TAG, "RAW UNIX TIME: " + unixTime);
+            currentShiftHrsWrked.setText( getString(R.string.numHrsWrkedText) + Float.toString(data.getFloat(data.getColumnIndex(ShiftColumns.NUM_HRS_SHIFT))));
+            currentShiftGrossPay.setText( getString(R.string.grossPayText) + Float.toString(data.getFloat(data.getColumnIndex(ShiftColumns.GROSS_PAY))));
+        }
 
 
-        float hourlyPay = (float) 12.66;
-        shiftValues.putHourlyPay(hourlyPay);
+    }
 
-        String dayOfWeek = String.valueOf(nowDate.getWeekDay());
-        shiftValues.putDayOfWeek(dayOfWeek);
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
 
-        String monthNum = String.valueOf(nowDate.getMonth());
-        shiftValues.putMonthName(monthNum);
-
-        Integer yearNum = nowDate.getYear();
-        shiftValues.putYear(yearNum);
-
-                   *//* // TODO: NEEDS TO BE NULLABLE
-                    shiftValues.putGrossPay((float) 12.66);*//*
-
-        return getContentResolver().insert(ShiftColumns.CONTENT_URI, shiftValues.values());
-
-    }*/
-
-    /**
-     * This method handles clocking out, that is, putting in the ending time, both Unix Time and hhmm format
-     * Calculates the number of hours being worked by subtracting the end unix time by start unix time, and converting that to hours
-     * Then uses that to calculate the gross pay 
-     *
-     * @return
-     */
-    /*void clockOut(Uri clockInRow) {
-        ShiftContentValues shiftContentValues = new ShiftContentValues();
-
-        Date dateForUnixTime = new Date();
-        long unixTime = (dateForUnixTime.getTime() / 1000);
-        shiftContentValues.putEndTimeUnix((int) unixTime);
-
-        shiftContentValues.putEndTimeHhmm(getCurrentHoursAndMinutes());
-
-         getContentResolver().update(clockInRow, shiftContentValues.values(),null, null);
+    }
 
 
 
-    }*/
 
     String getCurrentHoursAndMinutes() {
 
@@ -292,13 +200,7 @@ public class Main2Activity extends AppCompatActivity
 
         return  currentHoursAndMinutes;
     }
- /*   // TODO: 4/28/2016 Calculate Gross Pay based on the start time hours and minutes, and the end time hours and minutes
-    Double calcGrossPay(DateTime startTime, DateTime endTime) {
-        // convert both to UNIX time if possible, subtract the two, get the user's hourly pay that was inputted in the settings
 
-
-
-    }*/
 
     @Override
     public void onBackPressed() {
@@ -360,4 +262,5 @@ public class Main2Activity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 }

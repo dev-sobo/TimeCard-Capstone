@@ -30,4 +30,8 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="numHrsWrkedText">"NUMBER OF HOURS WORKED: "</string>
+    <string name="clockInTimeText">"CLOCK IN TIME: "</string>
+    <string name="clockOutTimeText">"CLOCK OUT TIME: "</string>
+    <string name="grossPayText">"GROSS PAY: "</string>
 </resources>
