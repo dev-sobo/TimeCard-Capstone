@@ -1,4 +1,4 @@
-package com.example.ian.timecardcapstone.calender;
+package com.example.ian.timecardcapstone.calenderlocalshifts;
 
 import android.database.Cursor;
 import android.database.DatabaseUtils;
@@ -16,7 +16,7 @@ import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidGridAdapter;
 
 
-public class ShiftsFragment extends CaldroidFragment implements LoaderManager.LoaderCallbacks<Cursor>{
+public class LocalShiftsFragment extends CaldroidFragment implements LoaderManager.LoaderCallbacks<Cursor>{
     private static final int LOADER_ID = 1;
     private static final String LOG_TAG = CaldroidFragment.class.getSimpleName();
     public static  String CURSOR_EXTRA = "cursor_extra";

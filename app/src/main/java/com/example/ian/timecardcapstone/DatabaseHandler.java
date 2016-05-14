@@ -49,8 +49,6 @@ public class DatabaseHandler {
             Toast.makeText(mContext, "Hourly pay is in invalid format", Toast.LENGTH_SHORT).show();
         }
 
-
-
         ShiftContentValues clockInValues = new ShiftContentValues();
 
         clockInValues.putDayOfMonth(clockInTime.getDay());

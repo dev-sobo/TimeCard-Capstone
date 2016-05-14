@@ -10,6 +10,7 @@ import android.os.Build;
 import android.util.Log;
 
 import com.example.ian.timecardcapstone.BuildConfig;
+import com.example.ian.timecardcapstone.provider.rosterappsdata.RosterappsdataColumns;
 import com.example.ian.timecardcapstone.provider.shift.ShiftColumns;
 
 public class ShiftDatabaseSQLiteOpenHelper extends SQLiteOpenHelper {
@@ -22,6 +23,13 @@ public class ShiftDatabaseSQLiteOpenHelper extends SQLiteOpenHelper {
     private final ShiftDatabaseSQLiteOpenHelperCallbacks mOpenHelperCallbacks;
 
     // @formatter:off
+    public static final String SQL_CREATE_TABLE_ROSTERAPPSDATA = "CREATE TABLE IF NOT EXISTS "
+            + RosterappsdataColumns.TABLE_NAME + " ( "
+            + RosterappsdataColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + RosterappsdataColumns.ROSTERAPPS_DATA + " TEXT, "
+            + RosterappsdataColumns.COLOR_OF_SHIFTS + " TEXT "
+            + " );";
+
     public static final String SQL_CREATE_TABLE_SHIFT = "CREATE TABLE IF NOT EXISTS "
             + ShiftColumns.TABLE_NAME + " ( "
             + ShiftColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -92,6 +100,7 @@ public class ShiftDatabaseSQLiteOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         if (BuildConfig.DEBUG) Log.d(TAG, "onCreate");
         mOpenHelperCallbacks.onPreCreate(mContext, db);
+        db.execSQL(SQL_CREATE_TABLE_ROSTERAPPSDATA);
         db.execSQL(SQL_CREATE_TABLE_SHIFT);
         mOpenHelperCallbacks.onPostCreate(mContext, db);
     }

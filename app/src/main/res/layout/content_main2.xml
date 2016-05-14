@@ -23,7 +23,7 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:focusable="true"
-        android:contentDescription="@string/clock_in_or_out"/>
+        android:contentDescription="@string/clock_in_or_clock_out"/>
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/bannerAd"

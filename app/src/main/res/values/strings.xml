@@ -34,4 +34,16 @@
     <string name="clockInTimeText">"CLOCK IN TIME: "</string>
     <string name="clockOutTimeText">"CLOCK OUT TIME: "</string>
     <string name="grossPayText">"GROSS PAY: "</string>
+    <string name="clock_in_or_clock_out">Clock in or Clock Out</string>
+    <string name="ad">ad</string>
+    <string name="usericon">user_icon</string>
+    <string name="refresh_shift">refresh_shift</string>
+    <string name="refresh_with_last_clocked_in_shift">refresh with last clocked in shift</string>
+    <string name="start_time">start_time</string>
+    <string name="endtime">end time</string>
+    <string name="dayofweek">day of week</string>
+    <string name="dayofmonth">day of month</string>
+    <string name="monthname">month name</string>
+    <string name="numofhoursworkedinshift">number of hours worked</string>
+    <string name="grosspay">gross pay</string>
 </resources>

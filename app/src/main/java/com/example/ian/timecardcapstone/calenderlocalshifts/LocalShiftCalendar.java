@@ -1,4 +1,4 @@
-package com.example.ian.timecardcapstone.calender;
+package com.example.ian.timecardcapstone.calenderlocalshifts;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -9,11 +9,11 @@ import com.roomorama.caldroid.CaldroidFragment;
 
 import java.util.Calendar;
 
-public class ShiftCalendar extends AppCompatActivity {
-    private ShiftsFragment caldroidFragment;
+public class LocalShiftCalendar extends AppCompatActivity {
+    private LocalShiftsFragment caldroidFragment;
     private static final String CALENDAR_SAVED_STATE = "CALDROID_SAVED_STATE";
 
-    private static final String LOG_TAG = ShiftCalendar.class.getSimpleName();
+    private static final String LOG_TAG = LocalShiftCalendar.class.getSimpleName();
 
 
     @Override
@@ -22,7 +22,7 @@ public class ShiftCalendar extends AppCompatActivity {
         setContentView(R.layout.activity_calender);
 
 
-        caldroidFragment = new ShiftsFragment();
+        caldroidFragment = new LocalShiftsFragment();
 
         if (savedInstanceState != null) {
             caldroidFragment.restoreStatesFromKey(savedInstanceState, CALENDAR_SAVED_STATE);

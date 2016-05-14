@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 import com.example.ian.timecardcapstone.provider.ShiftProvider;
+import com.example.ian.timecardcapstone.provider.rosterappsdata.RosterappsdataColumns;
 import com.example.ian.timecardcapstone.provider.shift.ShiftColumns;
 
 /**

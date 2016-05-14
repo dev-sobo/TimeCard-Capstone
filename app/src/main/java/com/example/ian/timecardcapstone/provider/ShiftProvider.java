@@ -1,18 +1,18 @@
 package com.example.ian.timecardcapstone.provider;
 
-import java.util.Arrays;
-
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.example.ian.timecardcapstone.BuildConfig;
 import com.example.ian.timecardcapstone.provider.base.BaseContentProvider;
+import com.example.ian.timecardcapstone.provider.rosterappsdata.RosterappsdataColumns;
 import com.example.ian.timecardcapstone.provider.shift.ShiftColumns;
+
+import java.util.Arrays;
 
 public class ShiftProvider extends BaseContentProvider {
     private static final String TAG = ShiftProvider.class.getSimpleName();
@@ -25,14 +25,19 @@ public class ShiftProvider extends BaseContentProvider {
     public static final String AUTHORITY = "com.example.ian.timecardcapstone.provider";
     public static final String CONTENT_URI_BASE = "content://" + AUTHORITY;
 
-    private static final int URI_TYPE_SHIFT = 0;
-    private static final int URI_TYPE_SHIFT_ID = 1;
+    private static final int URI_TYPE_ROSTERAPPSDATA = 0;
+    private static final int URI_TYPE_ROSTERAPPSDATA_ID = 1;
+
+    private static final int URI_TYPE_SHIFT = 2;
+    private static final int URI_TYPE_SHIFT_ID = 3;
 
 
 
     private static final UriMatcher URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
+        URI_MATCHER.addURI(AUTHORITY, RosterappsdataColumns.TABLE_NAME, URI_TYPE_ROSTERAPPSDATA);
+        URI_MATCHER.addURI(AUTHORITY, RosterappsdataColumns.TABLE_NAME + "/#", URI_TYPE_ROSTERAPPSDATA_ID);
         URI_MATCHER.addURI(AUTHORITY, ShiftColumns.TABLE_NAME, URI_TYPE_SHIFT);
         URI_MATCHER.addURI(AUTHORITY, ShiftColumns.TABLE_NAME + "/#", URI_TYPE_SHIFT_ID);
     }
@@ -51,6 +56,11 @@ public class ShiftProvider extends BaseContentProvider {
     public String getType(Uri uri) {
         int match = URI_MATCHER.match(uri);
         switch (match) {
+            case URI_TYPE_ROSTERAPPSDATA:
+                return TYPE_CURSOR_DIR + RosterappsdataColumns.TABLE_NAME;
+            case URI_TYPE_ROSTERAPPSDATA_ID:
+                return TYPE_CURSOR_ITEM + RosterappsdataColumns.TABLE_NAME;
+
             case URI_TYPE_SHIFT:
                 return TYPE_CURSOR_DIR + ShiftColumns.TABLE_NAME;
             case URI_TYPE_SHIFT_ID:
@@ -98,6 +108,14 @@ public class ShiftProvider extends BaseContentProvider {
         String id = null;
         int matchedId = URI_MATCHER.match(uri);
         switch (matchedId) {
+            case URI_TYPE_ROSTERAPPSDATA:
+            case URI_TYPE_ROSTERAPPSDATA_ID:
+                res.table = RosterappsdataColumns.TABLE_NAME;
+                res.idColumn = RosterappsdataColumns._ID;
+                res.tablesWithJoins = RosterappsdataColumns.TABLE_NAME;
+                res.orderBy = RosterappsdataColumns.DEFAULT_ORDER;
+                break;
+
             case URI_TYPE_SHIFT:
             case URI_TYPE_SHIFT_ID:
                 res.table = ShiftColumns.TABLE_NAME;
@@ -111,6 +129,7 @@ public class ShiftProvider extends BaseContentProvider {
         }
 
         switch (matchedId) {
+            case URI_TYPE_ROSTERAPPSDATA_ID:
             case URI_TYPE_SHIFT_ID:
                 id = uri.getLastPathSegment();
         }

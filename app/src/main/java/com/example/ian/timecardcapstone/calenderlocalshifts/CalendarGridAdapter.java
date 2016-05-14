@@ -1,4 +1,4 @@
-package com.example.ian.timecardcapstone.calender;
+package com.example.ian.timecardcapstone.calenderlocalshifts;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -18,7 +18,7 @@ import java.util.Map;
 import hirondelle.date4j.DateTime;
 
 
-public class CalendarGridAdapter extends CaldroidGridAdapter implements ShiftsFragment.CursorLoadedListener<Cursor> {
+public class CalendarGridAdapter extends CaldroidGridAdapter implements LocalShiftsFragment.CursorLoadedListener<Cursor> {
     private static final String LOG_TAG = CalendarGridAdapter.class.getSimpleName();
     private Cursor mCursor;
     private Context mContext;
@@ -91,7 +91,7 @@ public class CalendarGridAdapter extends CaldroidGridAdapter implements ShiftsFr
            Log.e(LOG_TAG, "EXTRADATA IS EMPTY");
             return "empty";
         }
-        Cursor shiftCursor = (Cursor) extraData.get(ShiftsFragment.CURSOR_EXTRA);
+        Cursor shiftCursor = (Cursor) extraData.get(LocalShiftsFragment.CURSOR_EXTRA);
         shiftCursor.moveToFirst();
 
         return shiftCursor.getString(shiftCursor.getColumnIndex(ShiftColumns.START_TIME_HHMM));
