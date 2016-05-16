@@ -47,16 +47,17 @@ public class RosterAppsGridAdapter extends CaldroidGridAdapter {
             rosterAppsCell = inflater.inflate(R.layout.rosterappscellview, null);
         }
         TextView rosterAppsData = (TextView) rosterAppsCell.findViewById(R.id.rosterAppsData);
-        TextView textViewDate = (TextView) rosterAppsCell.findViewById(R.id.dateRosterAppsView);
+     //   AutofitHelper.create(rosterAppsData);
+     //   TextView textViewDate = (TextView) rosterAppsCell.findViewById(R.id.dateRosterAppsView);
         DateTime dateTime = this.datetimeList.get(position);
         Resources resources = context.getResources();
-
+/*
         if(dateTime.getMonth() != month) {
            // rosterAppsCell.setBackgroundColor(resources.getColor(R.color.caldroid_gray));
             textViewDate.setTextColor(resources.getColor(R.color.caldroid_darker_gray));
-        }
+        }*/
 
-        textViewDate.setText("");
+       // textViewDate.setText("");
         // TODO: 5/13/2016 get the internet provided rosterapps data in here
         if (mCursor != null && dateTime.getMonth() == month) {
 

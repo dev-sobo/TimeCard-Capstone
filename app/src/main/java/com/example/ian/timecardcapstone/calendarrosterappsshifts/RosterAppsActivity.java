@@ -3,6 +3,7 @@ package com.example.ian.timecardcapstone.calendarrosterappsshifts;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +24,7 @@ public class RosterAppsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_roster_apps);
+
         mRosterappsFragment = new RosterappsFragment();
 
         if (savedInstanceState != null) {
@@ -42,6 +44,10 @@ public class RosterAppsActivity extends AppCompatActivity {
                 .replace(R.id.rosterAppsCalendar, mRosterappsFragment);
         fragmentTransaction.commit();
 
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        mRosterappsFragment.passScreenHeight(metrics.heightPixels);
+
         CaldroidListener listener = new CaldroidListener() {
             @Override
             public void onSelectDate(Date date, View view) {
@@ -53,4 +59,6 @@ public class RosterAppsActivity extends AppCompatActivity {
         mRosterappsFragment.setCaldroidListener(listener);
 
     }
+
+
 }

@@ -11,17 +11,21 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.util.ArrayMap;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -51,6 +55,30 @@ public class Main2Activity extends AppCompatActivity
     private TextView currentShiftDate;
     private TextView currentShiftHrsWrked;
     private TextView currentShiftGrossPay;
+    private ArrayMap<Integer, String> emailPassMap =  new ArrayMap<>();
+    public static final Integer ROSTERAPPS_PASS_KEY = 10;
+    public static final Integer ROSTERAPPS_EMAIL_KEY = 11;
+
+    TextView.OnEditorActionListener listener = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+            boolean handled = false;
+            if (i == EditorInfo.IME_ACTION_NEXT) {
+                emailPassMap.put(ROSTERAPPS_EMAIL_KEY, String.valueOf(textView.getText()));
+            }
+
+            if (i == EditorInfo.IME_ACTION_DONE) {
+                    emailPassMap.put(ROSTERAPPS_PASS_KEY, String.valueOf(textView.getText()));
+                handled = true;
+            }
+            if (handled) {
+                MyIntentService.startActionkLoginRosterapps(Main2Activity.this, emailPassMap.get(ROSTERAPPS_EMAIL_KEY), emailPassMap.get(ROSTERAPPS_PASS_KEY));
+            }
+
+            return handled;
+        }
+
+    };
 
     @Override
     protected void onResume() {
@@ -69,12 +97,21 @@ public class Main2Activity extends AppCompatActivity
         setSupportActionBar(toolbar);
         AdView adView = (AdView) findViewById(R.id.bannerAd);
         AdRequest adRequest = new AdRequest.Builder().addTestDevice("89C1C45775C35F9B96807A0DD84FAA1D").build();
-        adView.loadAd(adRequest);
+        if (adView != null) {
+            adView.loadAd(adRequest);
+        }
 
         TimeCardAnalytics app = (TimeCardAnalytics) getApplication();
         mTracker = app.getDefaultTracker();
 
+        EditText rosterAppsEmail = (EditText) findViewById(R.id.rosterAppsEmail);
+        EditText rosterAppsPassword = (EditText) findViewById(R.id.rosterAppsPassword);
+        rosterAppsEmail.setOnEditorActionListener(listener);
+        rosterAppsPassword.setOnEditorActionListener(listener);
+
+
         Button button = (Button) findViewById(R.id.button);
+        assert button != null;
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -149,6 +186,7 @@ public class Main2Activity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+
 
 
     @Override

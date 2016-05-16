@@ -46,4 +46,10 @@
     <string name="monthname">month name</string>
     <string name="numofhoursworkedinshift">number of hours worked</string>
     <string name="grosspay">gross pay</string>
+    <string name="current_shift_start">Current Shift Start</string>
+    <string name="current_shift_end">Current Shift End</string>
+    <string name="current_shift_date">Current Shift Date</string>
+    <string name="current_shift_hours_worked">Current Shift Hours Worked</string>
+    <string name="rosterapps_login_e_mail">rosterApps Login E-Mail</string>
+    <string name="rosterapps_password">RosterApps Password</string>
 </resources>

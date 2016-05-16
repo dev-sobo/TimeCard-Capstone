@@ -50,7 +50,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
+        android:text="@string/current_shift_start"
         android:id="@+id/currentShiftStart"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"/>
@@ -58,7 +58,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
+        android:text="@string/current_shift_end"
         android:id="@+id/currentShiftEnd"
         android:layout_below="@+id/currentShiftStart"
         android:layout_centerHorizontal="true"/>
@@ -66,7 +66,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
+        android:text="@string/current_shift_date"
         android:id="@+id/currentShiftDate"
         android:layout_below="@+id/currentShiftEnd"
         android:layout_centerHorizontal="true"/>
@@ -74,7 +74,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
+        android:text="@string/current_shift_hours_worked"
         android:id="@+id/currentShiftHrsWrked"
         android:layout_below="@+id/currentShiftDate"
         android:layout_centerHorizontal="true"/>
@@ -82,10 +82,32 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
+        android:text="@string/current_shift_hours_worked"
         android:id="@+id/currentShiftGrossPay"
         android:layout_below="@+id/currentShiftHrsWrked"
         android:layout_centerHorizontal="true"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/rosterAppsEmail"
+        android:layout_below="@+id/currentShiftGrossPay"
+        android:layout_centerHorizontal="true"
+        android:hint="@string/rosterapps_login_e_mail"
+        android:imeOptions="actionNext"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/rosterAppsPassword"
+        android:layout_below="@+id/rosterAppsEmail"
+        android:layout_centerHorizontal="true"
+        android:hint="@string/rosterapps_password"
+        android:imeOptions="flagNavigateNext|actionDone"/>
 
 
 </RelativeLayout>
