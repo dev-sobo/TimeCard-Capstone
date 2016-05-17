@@ -72,10 +72,10 @@ public class CalendarGridAdapter extends CaldroidGridAdapter implements LocalShi
                 if (cursorToday == dateTime.getDay()) {
                     dateTextView.setText(dateTime.getDay().toString());
                     // startTimeText.setText(Float.toString(mCursor.getFloat(mCursor.getColumnIndex(ShiftColumns.GROSS_PAY))));
-                    startTimeText.setText(mCursor.getString(mCursor.getColumnIndex(ShiftColumns.START_TIME_HHMM)));
-                    endTimeText.setText(mCursor.getString(mCursor.getColumnIndex(ShiftColumns.END_TIME_HHMM)));
-                    numHoursWrkedText.setText(mCursor.getString(mCursor.getColumnIndex(ShiftColumns.NUM_HRS_SHIFT)));
-                    grossPayText.setText(mCursor.getString(mCursor.getColumnIndex(ShiftColumns.GROSS_PAY)));
+                    startTimeText.setText("START TIME: " + mCursor.getString(mCursor.getColumnIndex(ShiftColumns.START_TIME_HHMM)));
+                    endTimeText.setText("END TIME: " +mCursor.getString(mCursor.getColumnIndex(ShiftColumns.END_TIME_HHMM)));
+                    numHoursWrkedText.setText("# HRS WRKD: " + mCursor.getString(mCursor.getColumnIndex(ShiftColumns.NUM_HRS_SHIFT)));
+                    grossPayText.setText("GROSS PAY: " + mCursor.getString(mCursor.getColumnIndex(ShiftColumns.GROSS_PAY)));
                 }
             }
         }
