@@ -59,9 +59,15 @@ public class RosterAppsGridAdapter extends CaldroidGridAdapter {
 
                if (mCursor.moveToPosition(position)) {
 
-                    rosterAppsData.setText(mCursor.getString(mCursor.getColumnIndex(RosterappsdataColumns.ROSTERAPPS_DATA)));
-
+                   String dataFromCursor = mCursor.getString(mCursor.getColumnIndex(RosterappsdataColumns.ROSTERAPPS_DATA));
+                   rosterAppsData.setText(dataFromCursor);
+                   rosterAppsData.setContentDescription(dataFromCursor);
             }
+        }
+        if (mCursor == null) {
+            String ensureLogin = context.getResources().getString(R.string.ensure_login);
+            rosterAppsData.setText(ensureLogin);
+            rosterAppsData.setContentDescription(ensureLogin);
         }
         rosterAppsData.setVisibility(View.GONE);
 
