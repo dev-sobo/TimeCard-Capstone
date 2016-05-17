@@ -52,4 +52,8 @@
     <string name="current_shift_hours_worked">Current Shift Hours Worked</string>
     <string name="rosterapps_login_e_mail">rosterApps Login E-Mail</string>
     <string name="rosterapps_password">RosterApps Password</string>
+    <string name="settings">Settings</string>
+    <string name="local_shift_calendar">Local Shift Calendar</string>
+    <string name="rosterapps_calendar">RosterApps Calendar</string>
+    <string name="home">Home</string>
 </resources>

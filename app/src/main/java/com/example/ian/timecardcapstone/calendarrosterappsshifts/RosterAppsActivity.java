@@ -8,7 +8,10 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ian.timecardcapstone.Main2Activity;
 import com.example.ian.timecardcapstone.R;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
@@ -19,11 +22,14 @@ public class RosterAppsActivity extends AppCompatActivity {
     private RosterappsFragment mRosterappsFragment;
     private static final String ROSTER_APPS_SAVED_STATE = "rosterapps_saved";
     private static final String LOG_TAG = RosterAppsActivity.class.getSimpleName();
+    private Tracker mTracker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_roster_apps);
+
+        mTracker = Main2Activity.app.getDefaultTracker();
 
         mRosterappsFragment = new RosterappsFragment();
 
@@ -37,6 +43,7 @@ public class RosterAppsActivity extends AppCompatActivity {
             calArgs.putBoolean(CaldroidFragment.ENABLE_SWIPE, false);
             calArgs.putBoolean(CaldroidFragment.SIX_WEEKS_IN_CALENDAR, true);
             calArgs.putBoolean(CaldroidFragment.SQUARE_TEXT_VIEW_CELL, true);
+            calArgs.putBoolean(CaldroidFragment.SHOW_NAVIGATION_ARROWS, false);
 
             mRosterappsFragment.setArguments(calArgs);
         }
@@ -53,12 +60,17 @@ public class RosterAppsActivity extends AppCompatActivity {
             public void onSelectDate(Date date, View view) {
                 TextView rosterAppsText = (TextView) view.findViewById(R.id.rosterAppsData);
 
-                Toast.makeText(RosterAppsActivity.this, rosterAppsText.getText(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(RosterAppsActivity.this, rosterAppsText.getText(), Toast.LENGTH_LONG).show();
             }
         };
         mRosterappsFragment.setCaldroidListener(listener);
 
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mTracker.setScreenName("ROSTER APPS CALENDAR ACTIVITY");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
 }

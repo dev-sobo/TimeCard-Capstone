@@ -24,13 +24,11 @@ import hirondelle.date4j.DateTime;
 public class RosterAppsGridAdapter extends CaldroidGridAdapter {
     private static final String LOG_TAG = RosterAppsGridAdapter.class.getSimpleName();
     private Cursor mCursor;
-    private int i;
 
     public RosterAppsGridAdapter(Context context, int month, int year, Map<String, Object> caldroidData, Map<String, Object> extraData) {
         super(context, month, year, caldroidData, extraData);
         mCursor = context.getContentResolver().query(RosterappsdataColumns.CONTENT_URI,null, null, null, null);
       //  Log.e(LOG_TAG, DatabaseUtils.dumpCursorToString(mCursor));
-        i=0;
         Log.i(LOG_TAG, "I IS INITIALIZED");
         Log.e(LOG_TAG, "CURSOR: " + DatabaseUtils.dumpCursorToString(mCursor));
     }
@@ -47,27 +45,25 @@ public class RosterAppsGridAdapter extends CaldroidGridAdapter {
             rosterAppsCell = inflater.inflate(R.layout.rosterappscellview, null);
         }
         TextView rosterAppsData = (TextView) rosterAppsCell.findViewById(R.id.rosterAppsData);
-     //   AutofitHelper.create(rosterAppsData);
-     //   TextView textViewDate = (TextView) rosterAppsCell.findViewById(R.id.dateRosterAppsView);
+        TextView textViewDate = (TextView) rosterAppsCell.findViewById(R.id.rosterAppsDate);
         DateTime dateTime = this.datetimeList.get(position);
         Resources resources = context.getResources();
-/*
         if(dateTime.getMonth() != month) {
-           // rosterAppsCell.setBackgroundColor(resources.getColor(R.color.caldroid_gray));
+            rosterAppsCell.setBackgroundColor(resources.getColor(R.color.caldroid_gray));
             textViewDate.setTextColor(resources.getColor(R.color.caldroid_darker_gray));
-        }*/
+        }
 
-       // textViewDate.setText("");
-        // TODO: 5/13/2016 get the internet provided rosterapps data in here
+        textViewDate.setText(dateTime.getDay().toString());
+
         if (mCursor != null && dateTime.getMonth() == month) {
 
                if (mCursor.moveToPosition(position)) {
-                   i++;
+
                     rosterAppsData.setText(mCursor.getString(mCursor.getColumnIndex(RosterappsdataColumns.ROSTERAPPS_DATA)));
-                    Log.e(LOG_TAG, "NUMBER I: " + i);
 
             }
         }
+        rosterAppsData.setVisibility(View.GONE);
 
         return rosterAppsCell;
     }

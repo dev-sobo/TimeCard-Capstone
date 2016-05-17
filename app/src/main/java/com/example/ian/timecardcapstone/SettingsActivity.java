@@ -15,8 +15,10 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        TimeCardAnalytics analytics = new TimeCardAnalytics();
-        mTracker = analytics.getDefaultTracker();
+       /* TimeCardAnalytics analytics = new TimeCardAnalytics();
+        mTracker = analytics.getDefaultTracker();*/
+       mTracker = Main2Activity.app.getDefaultTracker();
+
         getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment())
                 .commit();
     }

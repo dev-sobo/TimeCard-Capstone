@@ -55,10 +55,10 @@ public class CalendarGridAdapter extends CaldroidGridAdapter implements LocalShi
         DateTime dateTime = this.datetimeList.get(position);
         Resources resources = context.getResources();
         if (mCursor == null) {
-            dateTextView.setText(dateTime.getDay().toString());
+
             startTimeText.setText("");
         }
-
+        dateTextView.setText(dateTime.getDay().toString());
 
 
         if (dateTime.getMonth() != month) {

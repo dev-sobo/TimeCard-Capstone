@@ -5,9 +5,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -19,7 +17,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -58,6 +55,7 @@ public class Main2Activity extends AppCompatActivity
     private ArrayMap<Integer, String> emailPassMap =  new ArrayMap<>();
     public static final Integer ROSTERAPPS_PASS_KEY = 10;
     public static final Integer ROSTERAPPS_EMAIL_KEY = 11;
+    public static TimeCardAnalytics app;
 
     TextView.OnEditorActionListener listener = new TextView.OnEditorActionListener() {
         @Override
@@ -101,7 +99,7 @@ public class Main2Activity extends AppCompatActivity
             adView.loadAd(adRequest);
         }
 
-        TimeCardAnalytics app = (TimeCardAnalytics) getApplication();
+        app = (TimeCardAnalytics) getApplication();
         mTracker = app.getDefaultTracker();
 
         EditText rosterAppsEmail = (EditText) findViewById(R.id.rosterAppsEmail);
@@ -167,15 +165,6 @@ public class Main2Activity extends AppCompatActivity
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        assert fab != null;
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -250,7 +239,7 @@ public class Main2Activity extends AppCompatActivity
             super.onBackPressed();
         }
     }
-
+/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -273,7 +262,7 @@ public class Main2Activity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -282,20 +271,16 @@ public class Main2Activity extends AppCompatActivity
         int id = item.getItemId();
         Intent startCalendarActivity = new Intent(this, LocalShiftCalendar.class);
         Intent startRosterAppsActivity = new Intent(this, RosterAppsActivity.class);
-
-        if (id == R.id.nav_camera) {
+        Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
+        if (id == R.id.rosterapps_calendar) {
             startActivity(startRosterAppsActivity);
-        } else if (id == R.id.nav_gallery) {
+            return true;
+        } else if (id == R.id.nav_local_calendar) {
             startActivity(startCalendarActivity);
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+            return true;
+        }else if (id == R.id.nav_settings) {
+            startActivity(startSettingsActivity);
+            return true;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
