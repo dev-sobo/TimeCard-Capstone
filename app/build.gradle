@@ -25,10 +25,10 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file('androidKeystore.jks')
-            storePassword "maxis111"
-            keyAlias "greenday5494"
-            keyPassword "maxis111"
+            storeFile file('androidKeystore2.jks')
+            storePassword "mykeystorepass"
+            keyAlias "dev-sobo"
+            keyPassword "myaliaspass"
         }
     }
     buildTypes {
