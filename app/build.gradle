@@ -25,7 +25,7 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file('androidKeystore2.jks')
+            storeFile file('keystore/androidKeystore2.jks')
             storePassword "mykeystorepass"
             keyAlias "dev-sobo"
             keyPassword "myaliaspass"
