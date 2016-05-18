@@ -1,0 +1,38 @@
+{
+  "project_info": {
+    "project_number": "21588758255",
+    "project_id": "timecardcapstone"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:21588758255:android:46f455abe2e1fe57",
+        "android_client_info": {
+          "package_name": "com.example.ian.timecardcapstone"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiDIXujLuGIpLtQWyNjoh3a0kMT9K4rIU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-76396460-3"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

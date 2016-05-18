@@ -1,0 +1,10 @@
+*.iml
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
+# Contains sensitive data.
+google-services.json
