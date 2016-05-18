@@ -1,11 +1,15 @@
 package com.example.ian.timecardcapstone.calendarrosterappsshifts;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,9 +31,25 @@ public class RosterAppsDetailFragment extends DialogFragment {
     private static final String ARG_ROSTERAPPS_DATA = "param1";
     private static final String ARG_DIALOG_TITLE = "param2";
 
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        String title = mRosterAppsDate;
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        alertDialogBuilder.setTitle(title);
+        alertDialogBuilder.setMessage(mRosterAppsData);
+        alertDialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        return alertDialogBuilder.create();
+    }
+
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String mRosterAppsData;
+    private String mRosterAppsDate;
 
     private OnFragmentInteractionListener mListener;
 
@@ -58,8 +78,8 @@ public class RosterAppsDetailFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_ROSTERAPPS_DATA);
-            mParam2 = getArguments().getString(ARG_DIALOG_TITLE, "Today's Shift");
+            mRosterAppsData = getArguments().getString(ARG_ROSTERAPPS_DATA);
+            mRosterAppsDate = getArguments().getString(ARG_DIALOG_TITLE, "Today's Shift");
         }
     }
 
@@ -68,8 +88,8 @@ public class RosterAppsDetailFragment extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
         TextView rosterAppsDetailTextView = (TextView) view.findViewById(R.id
                 .rosterAppsDetailFragmentString);
-        rosterAppsDetailTextView.setText(mParam1);
-        String title = mParam2;
+        rosterAppsDetailTextView.setText(mRosterAppsData);
+        String title = mRosterAppsDate;
         getDialog().setTitle(title);
 
     }

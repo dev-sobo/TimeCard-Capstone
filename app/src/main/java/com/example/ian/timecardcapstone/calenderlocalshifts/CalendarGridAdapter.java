@@ -60,7 +60,7 @@ public class CalendarGridAdapter extends CaldroidGridAdapter {
 
             startTimeText.setText("");
         }
-        dateTextView.setText(String.format(Locale.getDefault(),"%td", dateTime.getDay().longValue()));
+        dateTextView.setText(dateTime.getDay().toString());
 
 
         if (dateTime.getMonth() != month) {

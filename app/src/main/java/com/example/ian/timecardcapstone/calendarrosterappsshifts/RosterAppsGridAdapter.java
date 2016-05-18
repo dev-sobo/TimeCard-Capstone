@@ -14,7 +14,6 @@ import com.example.ian.timecardcapstone.R;
 import com.example.ian.timecardcapstone.provider.rosterappsdata.RosterappsdataColumns;
 import com.roomorama.caldroid.CaldroidGridAdapter;
 
-import java.util.Locale;
 import java.util.Map;
 
 import hirondelle.date4j.DateTime;
@@ -54,9 +53,9 @@ public class RosterAppsGridAdapter extends CaldroidGridAdapter {
             textViewDate.setTextColor(resources.getColor(R.color.caldroid_darker_gray));
         }
 
-        textViewDate.setText(String.format(Locale.getDefault(),"%td",dateTime.getDay().longValue
-                ()));
-
+        textViewDate.setText(dateTime.getDay().toString());
+//String.format(Locale.getDefault(),"%td",dateTime.getDay().longValue
+       // ())
         if (mCursor != null && dateTime.getMonth() == month) {
 
             if (mCursor.moveToPosition(position)) {
