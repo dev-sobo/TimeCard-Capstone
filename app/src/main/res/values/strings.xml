@@ -1,0 +1,60 @@
+<resources>
+    <string name="app_name">TimeCard Capstone</string>
+    <string name="title_activity_main2">Main2Activity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hourlyPay">hourlyPay</string>
+    <string name="defaultHourlyPay">11.25</string>
+    <string name="clockIn">Clock In</string>
+    <string name="clockOut">Clock Out</string>
+    <string name="hourlyPayTitle">Hourly Pay:</string>
+    <string name="hourlyPayContent">Hourly Pay Value</string>
+    <string name="adModUnit">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="numHrsWrkedText">"NUMBER OF HOURS WORKED: "</string>
+    <string name="clockInTimeText">"CLOCK IN TIME: "</string>
+    <string name="clockOutTimeText">"CLOCK OUT TIME: "</string>
+    <string name="grossPayText">"GROSS PAY: "</string>
+    <string name="clock_in_or_clock_out">Clock in or Clock Out</string>
+    <string name="ad">ad</string>
+    <string name="usericon">user_icon</string>
+    <string name="refresh_shift">refresh_shift</string>
+    <string name="refresh_with_last_clocked_in_shift">refresh with last clocked in shift</string>
+    <string name="start_time">start_time</string>
+    <string name="endtime">end time</string>
+    <string name="dayofweek">day of week</string>
+    <string name="dayofmonth">day of month</string>
+    <string name="monthname">month name</string>
+    <string name="numofhoursworkedinshift">number of hours worked</string>
+    <string name="grosspay">gross pay</string>
+    <string name="current_shift_start">Current Shift Start</string>
+    <string name="current_shift_end">Current Shift End</string>
+    <string name="current_shift_date">Current Shift Date</string>
+    <string name="current_shift_hours_worked">Current Shift Hours Worked</string>
+    <string name="rosterapps_login_e_mail">rosterApps Login E-Mail</string>
+    <string name="rosterapps_password">RosterApps Password</string>
+    <string name="settings">Settings</string>
+    <string name="local_shift_calendar">Local Shift Calendar</string>
+    <string name="rosterapps_calendar">RosterApps Calendar</string>
+    <string name="home">Home</string>
+    <string name="ensure_login">Please ensure that you have logged into rosterapps or use the test login</string>
+</resources>

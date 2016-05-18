@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.ian.timecardcapstone.Main2Activity"
+    tools:showIn="@layout/app_bar_main2">
+
+    <ToggleButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ClockInClockOutid"
+        android:textOff="@string/clockIn"
+        android:textOn="@string/clockOut"
+        android:enabled="true"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:focusable="true"
+        android:contentDescription="@string/clock_in_or_clock_out"/>
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/bannerAd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/adModUnit"
+        android:focusable="true"
+        android:contentDescription="@string/ad"
+        />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test Login"
+        android:id="@+id/button"
+        android:layout_below="@+id/ClockInClockOutid"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="61dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/current_shift_start"
+        android:id="@+id/currentShiftStart"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/current_shift_end"
+        android:id="@+id/currentShiftEnd"
+        android:layout_below="@+id/currentShiftStart"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/current_shift_date"
+        android:id="@+id/currentShiftDate"
+        android:layout_below="@+id/currentShiftEnd"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/current_shift_hours_worked"
+        android:id="@+id/currentShiftHrsWrked"
+        android:layout_below="@+id/currentShiftDate"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/current_shift_hours_worked"
+        android:id="@+id/currentShiftGrossPay"
+        android:layout_below="@+id/currentShiftHrsWrked"
+        android:layout_centerHorizontal="true"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/rosterAppsEmail"
+        android:layout_below="@+id/currentShiftGrossPay"
+        android:layout_centerHorizontal="true"
+        android:hint="@string/rosterapps_login_e_mail"
+        android:imeOptions="actionNext"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/rosterAppsPassword"
+        android:layout_below="@+id/rosterAppsEmail"
+        android:layout_centerHorizontal="true"
+        android:hint="@string/rosterapps_password"
+        android:imeOptions="flagNavigateNext|actionDone"/>
+
+
+</RelativeLayout>
