@@ -49,11 +49,11 @@ public class LocalShiftsFragment extends CaldroidFragment implements LoaderManag
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         Log.e(LOG_TAG, "LOADER DATA: " + DatabaseUtils.dumpCursorToString(data));
 
-        if (data.moveToFirst()) {
-            mCursorLoadedListener = (CursorLoadedListener<Cursor>) getNewDatesGridAdapter(getMonth(), 2016);
+      /*  if (data.moveToFirst()) {
+            mCursorLoadedListener = getNewDatesGridAdapter(getMonth(), 2016);
             mCursorLoadedListener.onCursorLoaded(data);
         }
-
+*/
         refreshView();
     }
 

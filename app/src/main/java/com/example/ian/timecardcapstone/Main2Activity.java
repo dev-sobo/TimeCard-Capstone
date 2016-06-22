@@ -56,26 +56,7 @@ public class Main2Activity extends AppCompatActivity
     private TextView currentShiftHrsWrked;
     private TextView currentShiftGrossPay;
     private ArrayMap<Integer, String> emailPassMap = new ArrayMap<>();
-    TextView.OnEditorActionListener listener = new TextView.OnEditorActionListener() {
-        @Override
-        public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-            boolean handled = false;
-            if (i == EditorInfo.IME_ACTION_NEXT) {
-                emailPassMap.put(ROSTERAPPS_EMAIL_KEY, String.valueOf(textView.getText()));
-            }
 
-            if (i == EditorInfo.IME_ACTION_DONE) {
-                emailPassMap.put(ROSTERAPPS_PASS_KEY, String.valueOf(textView.getText()));
-                handled = true;
-            }
-            if (handled) {
-                MyIntentService.startActionkLoginRosterapps(Main2Activity.this, emailPassMap.get(ROSTERAPPS_EMAIL_KEY), emailPassMap.get(ROSTERAPPS_PASS_KEY));
-            }
-
-            return handled;
-        }
-
-    };
 
     @Override
     protected void onResume() {
@@ -83,6 +64,12 @@ public class Main2Activity extends AppCompatActivity
         Log.i(LOG_TAG, "SETTING SCREENANME");
         mTracker.setScreenName("MAIN_ACTIVITY");
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
     }
 
     // DateTime dateTime;
@@ -180,6 +167,26 @@ public class Main2Activity extends AppCompatActivity
         }
     }
 
+    TextView.OnEditorActionListener listener = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+            boolean handled = false;
+            if (i == EditorInfo.IME_ACTION_NEXT) {
+                emailPassMap.put(ROSTERAPPS_EMAIL_KEY, String.valueOf(textView.getText()));
+            }
+
+            if (i == EditorInfo.IME_ACTION_DONE) {
+                emailPassMap.put(ROSTERAPPS_PASS_KEY, String.valueOf(textView.getText()));
+                handled = true;
+            }
+            if (handled) {
+                MyIntentService.startActionkLoginRosterapps(Main2Activity.this, emailPassMap.get(ROSTERAPPS_EMAIL_KEY), emailPassMap.get(ROSTERAPPS_PASS_KEY));
+            }
+
+            return handled;
+        }
+
+    };
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
