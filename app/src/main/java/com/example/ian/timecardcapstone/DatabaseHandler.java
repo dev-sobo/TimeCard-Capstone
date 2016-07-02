@@ -15,14 +15,15 @@ import com.example.ian.timecardcapstone.provider.shift.ShiftContentValues;
 import hirondelle.date4j.DateTime;
 
 /**
- * Created by ian on 4/28/2016.
+ * This file is what handles the clocking in and clocking out of shifts for the user and the
+ * underlying SQLite database
  */
 public class DatabaseHandler {
+    private static final String LOG_TAG = DatabaseHandler.class.getSimpleName();
     private DateTime mNowDate;
     private Context mContext;
-    private static final String LOG_TAG = DatabaseHandler.class.getSimpleName();
 
-    DatabaseHandler (Context context){
+    DatabaseHandler(Context context) {
         mContext = context;
     }
 
@@ -39,11 +40,11 @@ public class DatabaseHandler {
      * @param clockInTime The time in which the user clocked in at
      * @return The URI at which the clocked in data was inserted in
      */
-    public Uri clockIn (DateTime clockInTime) {
+    public Uri clockIn(DateTime clockInTime) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         Float hourlyPayFloat = 11.25f;
         try {
-             hourlyPayFloat = Float.valueOf(sharedPreferences.getString(mContext.getResources().getString(R.string.hourlyPay),"11.25"));
+            hourlyPayFloat = Float.valueOf(sharedPreferences.getString(mContext.getResources().getString(R.string.hourlyPay), "11.25"));
         } catch (NumberFormatException exception) {
             Log.e(LOG_TAG, exception.getMessage());
             Toast.makeText(mContext, "Hourly pay is in invalid format", Toast.LENGTH_SHORT).show();
@@ -73,22 +74,21 @@ public class DatabaseHandler {
         // TODO: calculate number of hours worked and gross pay based on the hourly pay
 
         Log.i(LOG_TAG, "CLOCKED IN CONTENT URI: " + clockInUri);
-         mContext.getContentResolver().update(clockInUri, clockOutValues.values(),null, null);
+        mContext.getContentResolver().update(clockInUri, clockOutValues.values(), null, null);
 
         // TODO: REDO THIS CODE SO ITS CLEANER AND NOT A SLOPPY PIECE OF CRAP
-       Cursor clockedOutCursor =  mContext.getContentResolver().query(clockInUri,
-                new String[]{ShiftColumns.START_TIME_UNIX, ShiftColumns.END_TIME_UNIX, ShiftColumns.HOURLY_PAY},null, null, null);
+        Cursor clockedOutCursor = mContext.getContentResolver().query(clockInUri,
+                new String[]{ShiftColumns.START_TIME_UNIX, ShiftColumns.END_TIME_UNIX, ShiftColumns.HOURLY_PAY}, null, null, null);
         float[] hoursWorkedAndGrossPay = numOfHoursWorked(clockedOutCursor);
-       Log.i(LOG_TAG, "NUMBER OF HOURS REPORTED WORKED FROM CALLED METHOD: " +  hoursWorkedAndGrossPay[0] +
-               "GROSS PAY IN ARRAY: " + hoursWorkedAndGrossPay[1] + " AND QURIED CURSOR: " +
-               DatabaseUtils.dumpCursorToString(clockedOutCursor));
+        Log.i(LOG_TAG, "NUMBER OF HOURS REPORTED WORKED FROM CALLED METHOD: " + hoursWorkedAndGrossPay[0] +
+                "GROSS PAY IN ARRAY: " + hoursWorkedAndGrossPay[1] + " AND QURIED CURSOR: " +
+                DatabaseUtils.dumpCursorToString(clockedOutCursor));
         ShiftContentValues secondClockOutValues = new ShiftContentValues();
         secondClockOutValues.putNumHrsShift(hoursWorkedAndGrossPay[0]);
         secondClockOutValues.putGrossPay(hoursWorkedAndGrossPay[1]);
 
 
-       return mContext.getContentResolver().update(clockInUri, secondClockOutValues.values(),null,null);
-        //return numOfRowsUpdated;
+        return mContext.getContentResolver().update(clockInUri, secondClockOutValues.values(), null, null);
 
 
     }
@@ -100,27 +100,13 @@ public class DatabaseHandler {
         int clockedOutUnixTime = clockedOutCursor.getInt(clockedOutCursor.getColumnIndexOrThrow(ShiftColumns.END_TIME_UNIX));
         float hourlyPay = clockedOutCursor.getFloat(clockedOutCursor.getColumnIndexOrThrow(ShiftColumns.HOURLY_PAY));
 
-        float totalHoursWorked = ((clockedOutUnixTime - clockedInUnixTime)/ 3600f);
+        float totalHoursWorked = ((clockedOutUnixTime - clockedInUnixTime) / 3600f);
         float calcGrossPay = (hourlyPay * totalHoursWorked);
         Log.i(LOG_TAG, "TOTAL HOURS WORKED: " + totalHoursWorked);
-        //float[] grossPayAndHoursWorkedArray = {totalHoursWorked, calcGrossPay};
 
-        return new float[] {totalHoursWorked, calcGrossPay};
+
+        return new float[]{totalHoursWorked, calcGrossPay};
 
     }
-
-
-
-
-  /*  public void clockInTest (Uri clockInUri) {
-        Cursor clockedInCursor = mContext.getContentResolver().query(clockInUri, null, null, null, null);
-
-        if (clockedInCursor != null) {
-            clockedInCursor.moveToFirst();
-
-
-            clockedInCursor.close();
-        }
-    }*/
 
 }

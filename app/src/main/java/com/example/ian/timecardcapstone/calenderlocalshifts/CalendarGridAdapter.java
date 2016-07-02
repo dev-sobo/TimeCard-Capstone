@@ -13,12 +13,14 @@ import com.example.ian.timecardcapstone.R;
 import com.example.ian.timecardcapstone.provider.shift.ShiftColumns;
 import com.roomorama.caldroid.CaldroidGridAdapter;
 
+import java.util.Locale;
 import java.util.Map;
 
 import hirondelle.date4j.DateTime;
 
 
-public class CalendarGridAdapter extends CaldroidGridAdapter implements LocalShiftsFragment.CursorLoadedListener<Cursor> {
+@SuppressWarnings("deprecation")
+public class CalendarGridAdapter extends CaldroidGridAdapter {
     private static final String LOG_TAG = CalendarGridAdapter.class.getSimpleName();
     private Cursor mCursor;
     private Context mContext;
@@ -27,7 +29,7 @@ public class CalendarGridAdapter extends CaldroidGridAdapter implements LocalShi
                                Map<String, Object> extraData) {
         super(context, month, year, caldroidData, extraData);
         mContext = context;
-        mCursor = mContext.getContentResolver().query(ShiftColumns.CONTENT_URI,   new String[] {ShiftColumns.START_TIME_HHMM, ShiftColumns.END_TIME_HHMM, ShiftColumns.DAY_OF_MONTH,
+        mCursor = mContext.getContentResolver().query(ShiftColumns.CONTENT_URI, new String[]{ShiftColumns.START_TIME_HHMM, ShiftColumns.END_TIME_HHMM, ShiftColumns.DAY_OF_MONTH,
                 ShiftColumns.MONTH_NAME, ShiftColumns.NUM_HRS_SHIFT, ShiftColumns.GROSS_PAY}, null, null, null);
 
 
@@ -65,18 +67,18 @@ public class CalendarGridAdapter extends CaldroidGridAdapter implements LocalShi
             dateTextView.setTextColor(resources.getColor(R.color.caldroid_darker_gray));
             cellView.setBackgroundColor(resources.getColor(R.color.caldroid_gray));
         }
-        if (mCursor!= null) {
+        if (mCursor != null) {
             if (mCursor.moveToFirst()) {
                 int cursorToday = mCursor.getInt(mCursor.getColumnIndex(ShiftColumns.DAY_OF_MONTH));
                 Log.e(LOG_TAG, "TODAY: " + getToday().getDay());
                 if (cursorToday == dateTime.getDay()) {
-                    dateTextView.setText(dateTime.getDay().toString());
+                    dateTextView.setText(String.format(Locale.getDefault(),"%td", dateTime.getDay().longValue()));
                     dateTextView.setContentDescription(dateTime.getDay().toString());
-                    // startTimeText.setText(Float.toString(mCursor.getFloat(mCursor.getColumnIndex(ShiftColumns.GROSS_PAY))));
+
                     startTimeText.setText("START TIME: " + mCursor.getString(mCursor.getColumnIndex(ShiftColumns.START_TIME_HHMM)));
                     startTimeText.setContentDescription("START TIME: " + mCursor.getString(mCursor.getColumnIndex(ShiftColumns.START_TIME_HHMM)));
-                    endTimeText.setText("END TIME: " +mCursor.getString(mCursor.getColumnIndex(ShiftColumns.END_TIME_HHMM)));
-                    endTimeText.setContentDescription("END TIME: " +mCursor.getString(mCursor.getColumnIndex(ShiftColumns.END_TIME_HHMM)));
+                    endTimeText.setText("END TIME: " + mCursor.getString(mCursor.getColumnIndex(ShiftColumns.END_TIME_HHMM)));
+                    endTimeText.setContentDescription("END TIME: " + mCursor.getString(mCursor.getColumnIndex(ShiftColumns.END_TIME_HHMM)));
                     numHoursWrkedText.setText("# HRS WRKD: " + mCursor.getString(mCursor.getColumnIndex(ShiftColumns.NUM_HRS_SHIFT)));
                     numHoursWrkedText.setContentDescription("# HRS WRKD: " + mCursor.getString(mCursor.getColumnIndex(ShiftColumns.NUM_HRS_SHIFT)));
                     grossPayText.setText("GROSS PAY: " + mCursor.getString(mCursor.getColumnIndex(ShiftColumns.GROSS_PAY)));
@@ -84,40 +86,8 @@ public class CalendarGridAdapter extends CaldroidGridAdapter implements LocalShi
                 }
             }
         }
-
-        //startTimeText.setText("this is a really long sentence to see what happens when something super long is on here");
-
         return cellView;
     }
 
-   /* private String getShiftText()  {
-        Map<String, Object> extraData = getExtraData();
-        if (extraData.isEmpty()) {
-           Log.e(LOG_TAG, "EXTRADATA IS EMPTY");
-            return "empty";
-        }
-        Cursor shiftCursor = (Cursor) extraData.get(LocalShiftsFragment.CURSOR_EXTRA);
-        shiftCursor.moveToFirst();
-
-        return shiftCursor.getString(shiftCursor.getColumnIndex(ShiftColumns.START_TIME_HHMM));
-    }*/
-
-
-
-    @Override
-    public void onCursorLoaded(Cursor cursor) {
-      /*  mCursor = cursor;
-        cursor.moveToFirst();
-        String start_time = cursor.getString(cursor.getColumnIndex(ShiftColumns.START_TIME_HHMM));
-        String end_time = cursor.getString(cursor.getColumnIndex(ShiftColumns.END_TIME_HHMM));
-        LayoutInflater inflater = (LayoutInflater) context.
-                getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        View cellView =  inflater.inflate(R.layout.cellview, null);
-        TextView shiftDataText = (TextView) cellView.findViewById(R.id.shiftDataText);
-        shiftDataText.setText(start_time + "     " + end_time);
-        Log.e(LOG_TAG, "CURSOR: " + DatabaseUtils.dumpCursorToString(cursor));
-        notifyDataSetChanged();*/
-    }
 
 }

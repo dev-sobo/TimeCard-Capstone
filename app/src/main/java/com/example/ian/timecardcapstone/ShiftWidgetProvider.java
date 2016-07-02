@@ -16,10 +16,12 @@ import com.example.ian.timecardcapstone.provider.shift.ShiftColumns;
 
 import java.util.Locale;
 
-/**
- * Created by ian on 5/5/2016.
- */
+
 public class ShiftWidgetProvider extends AppWidgetProvider {
+    private final static String LOG_TAG = ShiftWidgetProvider.class.getSimpleName();
+    public static String UPDATE_WIDGET = "updateWidget";
+    public static String REMOTE_VIEWS_EXTRA = "remoteViewsExtra";
+    public static String APP_WIDGET_IDS_EXTRA = "appWidgetIdsExtra";
     private Button refreshShift;
     private String startTime;
     private String endTime;
@@ -28,11 +30,7 @@ public class ShiftWidgetProvider extends AppWidgetProvider {
     private String monthNameNumber;
     private String numOfHoursWorked;
     private String grossPay;
-    private final static String LOG_TAG = ShiftWidgetProvider.class.getSimpleName();
     private Cursor shift;
-    public static String UPDATE_WIDGET = "updateWidget";
-    public static String REMOTE_VIEWS_EXTRA = "remoteViewsExtra";
-    public static String APP_WIDGET_IDS_EXTRA = "appWidgetIdsExtra";
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -40,28 +38,12 @@ public class ShiftWidgetProvider extends AppWidgetProvider {
         final int length = appWidgetIds.length;
 
 
-        for (int i = 0; i < length; i++) {
+        for (int appWidgetId : appWidgetIds) {
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.shiftwidgetlayout);
 
 
+            remoteViews = populateWidget(remoteViews, context);
 
-           /* try {
-                shift = context.getContentResolver().query(ShiftColumns.CONTENT_URI, new String[]{ShiftColumns.START_TIME_HHMM,
-                                ShiftColumns.END_TIME_HHMM, ShiftColumns.DAY_OF_MONTH, ShiftColumns.DAY_OF_WEEK,
-                                ShiftColumns.MONTH_NAME, ShiftColumns.NUM_HRS_SHIFT, ShiftColumns.GROSS_PAY}, null,
-                        null, ShiftColumns._ID + " ASC");
-                Log.e(LOG_TAG, "WIDGET CURSOR DUMP: " + DatabaseUtils.dumpCursorToString(shift));
-            } catch (SQLException exception) {
-                Log.e(LOG_TAG, "DATABASE ERROR: " + exception.getMessage());
-            } catch (Exception error) {
-                Log.e(LOG_TAG, "error: " + error.getMessage());
-            }
-*/
-           remoteViews = populateWidget(remoteViews, context);
-            /*if (shift != null && shift.moveToLast()) {
-
-
-            }*/
             Intent intent = new Intent(context, ShiftWidgetProvider.class);
             intent.putExtra(REMOTE_VIEWS_EXTRA, remoteViews);
             intent.putExtra(APP_WIDGET_IDS_EXTRA, appWidgetIds);
@@ -126,11 +108,10 @@ public class ShiftWidgetProvider extends AppWidgetProvider {
         if (intent.getAction().equals(UPDATE_WIDGET) && intent.hasExtra(REMOTE_VIEWS_EXTRA) && intent.hasExtra(APP_WIDGET_IDS_EXTRA)) {
             parceledViews = intent.getParcelableExtra(REMOTE_VIEWS_EXTRA);
             sentAppWidgetIds = intent.getIntArrayExtra(APP_WIDGET_IDS_EXTRA);
-            parceledViews =  populateWidget(parceledViews, context);
+            parceledViews = populateWidget(parceledViews, context);
             appWidgetManager.updateAppWidget(sentAppWidgetIds, parceledViews);
         }
     }
-
 
 
 }

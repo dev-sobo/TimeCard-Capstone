@@ -9,19 +9,20 @@ import com.google.android.gms.analytics.Tracker;
 
 public class SettingsActivity extends AppCompatActivity {
 
-   private Tracker mTracker;
     private static final String LOG_TAG = SettingsActivity.class.getSimpleName();
+    private Tracker mTracker;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-       /* TimeCardAnalytics analytics = new TimeCardAnalytics();
-        mTracker = analytics.getDefaultTracker();*/
-       mTracker = Main2Activity.app.getDefaultTracker();
+
+        mTracker = Main2Activity.app.getDefaultTracker();
 
         getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment())
                 .commit();
     }
+
     @Override
     protected void onResume() {
         super.onResume();

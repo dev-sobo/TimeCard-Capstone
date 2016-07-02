@@ -14,12 +14,10 @@ import com.roomorama.caldroid.CaldroidFragment;
 import java.util.Calendar;
 
 public class LocalShiftCalendar extends AppCompatActivity {
-    private LocalShiftsFragment caldroidFragment;
     private static final String CALENDAR_SAVED_STATE = "CALDROID_SAVED_STATE";
-
     private static final String LOG_TAG = LocalShiftCalendar.class.getSimpleName();
+    private LocalShiftsFragment caldroidFragment;
     private Tracker mTracker;
-
 
 
     @Override

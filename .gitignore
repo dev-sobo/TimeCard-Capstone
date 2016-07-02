@@ -6,3 +6,5 @@
 .DS_Store
 /build
 /captures
+# Contains sensitive data.
+google-services.json

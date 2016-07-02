@@ -21,14 +21,15 @@ import hirondelle.date4j.DateTime;
 /**
  * Created by ian on 5/13/2016.
  */
+@SuppressWarnings("deprecation")
 public class RosterAppsGridAdapter extends CaldroidGridAdapter {
     private static final String LOG_TAG = RosterAppsGridAdapter.class.getSimpleName();
     private Cursor mCursor;
 
     public RosterAppsGridAdapter(Context context, int month, int year, Map<String, Object> caldroidData, Map<String, Object> extraData) {
         super(context, month, year, caldroidData, extraData);
-        mCursor = context.getContentResolver().query(RosterappsdataColumns.CONTENT_URI,null, null, null, null);
-      //  Log.e(LOG_TAG, DatabaseUtils.dumpCursorToString(mCursor));
+        mCursor = context.getContentResolver().query(RosterappsdataColumns.CONTENT_URI, null, null, null, null);
+        //  Log.e(LOG_TAG, DatabaseUtils.dumpCursorToString(mCursor));
         Log.i(LOG_TAG, "I IS INITIALIZED");
         Log.e(LOG_TAG, "CURSOR: " + DatabaseUtils.dumpCursorToString(mCursor));
     }
@@ -40,7 +41,6 @@ public class RosterAppsGridAdapter extends CaldroidGridAdapter {
         View rosterAppsCell = convertView;
 
 
-
         if (convertView == null) {
             rosterAppsCell = inflater.inflate(R.layout.rosterappscellview, null);
         }
@@ -48,20 +48,21 @@ public class RosterAppsGridAdapter extends CaldroidGridAdapter {
         TextView textViewDate = (TextView) rosterAppsCell.findViewById(R.id.rosterAppsDate);
         DateTime dateTime = this.datetimeList.get(position);
         Resources resources = context.getResources();
-        if(dateTime.getMonth() != month) {
+        if (dateTime.getMonth() != month) {
             rosterAppsCell.setBackgroundColor(resources.getColor(R.color.caldroid_gray));
             textViewDate.setTextColor(resources.getColor(R.color.caldroid_darker_gray));
         }
 
         textViewDate.setText(dateTime.getDay().toString());
-
+//String.format(Locale.getDefault(),"%td",dateTime.getDay().longValue
+       // ())
         if (mCursor != null && dateTime.getMonth() == month) {
 
-               if (mCursor.moveToPosition(position)) {
+            if (mCursor.moveToPosition(position)) {
 
-                   String dataFromCursor = mCursor.getString(mCursor.getColumnIndex(RosterappsdataColumns.ROSTERAPPS_DATA));
-                   rosterAppsData.setText(dataFromCursor);
-                   rosterAppsData.setContentDescription(dataFromCursor);
+                String dataFromCursor = mCursor.getString(mCursor.getColumnIndex(RosterappsdataColumns.ROSTERAPPS_DATA));
+                rosterAppsData.setText(dataFromCursor);
+                rosterAppsData.setContentDescription(dataFromCursor);
             }
         }
         if (mCursor == null) {
@@ -73,7 +74,8 @@ public class RosterAppsGridAdapter extends CaldroidGridAdapter {
 
         return rosterAppsCell;
     }
-    public void setCursorToFirst(){
+
+    public void setCursorToFirst() {
         mCursor.moveToFirst();
 
     }

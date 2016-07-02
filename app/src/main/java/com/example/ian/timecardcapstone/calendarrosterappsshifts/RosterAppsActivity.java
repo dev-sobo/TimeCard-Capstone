@@ -1,12 +1,14 @@
 package com.example.ian.timecardcapstone.calendarrosterappsshifts;
 
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.ian.timecardcapstone.Main2Activity;
 import com.example.ian.timecardcapstone.R;
@@ -18,16 +20,22 @@ import com.roomorama.caldroid.CaldroidListener;
 import java.util.Calendar;
 import java.util.Date;
 
-public class RosterAppsActivity extends AppCompatActivity {
-    private RosterappsFragment mRosterappsFragment;
+public class RosterAppsActivity extends AppCompatActivity implements RosterAppsDetailFragment.OnFragmentInteractionListener {
+
     private static final String ROSTER_APPS_SAVED_STATE = "rosterapps_saved";
     private static final String LOG_TAG = RosterAppsActivity.class.getSimpleName();
+    private static final String DETAIL_FRAG_TAG = "rosterappsdetailfragmenttag";
+    private RosterappsFragment mRosterappsFragment;
     private Tracker mTracker;
+    private RosterAppsDetailFragment mRosterAppsDetailFragment;
+    private android.support.v4.app.FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_roster_apps);
+
+        fragmentManager = getSupportFragmentManager();
 
         mTracker = Main2Activity.app.getDefaultTracker();
 
@@ -47,7 +55,7 @@ public class RosterAppsActivity extends AppCompatActivity {
 
             mRosterappsFragment.setArguments(calArgs);
         }
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction()
+        final FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction()
                 .replace(R.id.rosterAppsCalendar, mRosterappsFragment);
         fragmentTransaction.commit();
 
@@ -58,9 +66,14 @@ public class RosterAppsActivity extends AppCompatActivity {
         CaldroidListener listener = new CaldroidListener() {
             @Override
             public void onSelectDate(Date date, View view) {
-                TextView rosterAppsText = (TextView) view.findViewById(R.id.rosterAppsData);
+                TextView rosterAppsData = (TextView) view.findViewById(R.id.rosterAppsData);
+                TextView rosterAppsDate = (TextView) view.findViewById(R.id.rosterAppsDate);
+                FragmentManager dialogFM = getSupportFragmentManager();
+                RosterAppsDetailFragment detailFragment = RosterAppsDetailFragment.newInstance(
+                        (String)rosterAppsData.getText(),
+                        (String) rosterAppsDate.getText());
+                detailFragment.show(dialogFM,DETAIL_FRAG_TAG);
 
-                Toast.makeText(RosterAppsActivity.this, rosterAppsText.getText(), Toast.LENGTH_LONG).show();
             }
         };
         mRosterappsFragment.setCaldroidListener(listener);
@@ -72,5 +85,10 @@ public class RosterAppsActivity extends AppCompatActivity {
         super.onResume();
         mTracker.setScreenName("ROSTER APPS CALENDAR ACTIVITY");
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        Log.i(LOG_TAG, "fragment listener called");
     }
 }
