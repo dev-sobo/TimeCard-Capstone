@@ -39,6 +39,11 @@ import java.util.TimeZone;
 
 import hirondelle.date4j.DateTime;
 
+
+/**
+ * This class has the responsibility of managing a user's log in to RosterApps as well as their clocking in and out to the database
+ * This should be broken up more.
+ */
 public class Main2Activity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor>, NavigationView.OnNavigationItemSelectedListener {
     public static final Integer ROSTERAPPS_PASS_KEY = 10;
@@ -103,16 +108,16 @@ public class Main2Activity extends AppCompatActivity
 
         EditText rosterAppsEmail = (EditText) findViewById(R.id.rosterAppsEmail);
         EditText rosterAppsPassword = (EditText) findViewById(R.id.rosterAppsPassword);
-        if (rosterAppsEmail != null) {
+        if (rosterAppsEmail != null ) {
             rosterAppsEmail.setOnEditorActionListener(listener);
             rosterAppsPassword.setOnEditorActionListener(listener);
         }
 
 
 
-        Button button = (Button) findViewById(R.id.button);
-        assert button != null;
-        button.setOnClickListener(new View.OnClickListener() {
+        Button testLoginButton = (Button) findViewById(R.id.button);
+        assert testLoginButton != null;
+        testLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 MyIntentService.startActionkLoginRosterapps(Main2Activity.this, "ian.sobocinski@jetblue.com", "Thisisforthezoos.");

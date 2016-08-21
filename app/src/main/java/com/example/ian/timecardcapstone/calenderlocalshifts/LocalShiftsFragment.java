@@ -20,7 +20,7 @@ public class LocalShiftsFragment extends CaldroidFragment implements LoaderManag
     private static final int LOADER_ID = 1;
     private static final String LOG_TAG = CaldroidFragment.class.getSimpleName();
     public static String CURSOR_EXTRA = "cursor_extra";
-    private CursorLoadedListener<Cursor> mCursorLoadedListener;
+   // private CursorLoadedListener<Cursor> mCursorLoadedListener;
 
 
     @Override
@@ -49,10 +49,8 @@ public class LocalShiftsFragment extends CaldroidFragment implements LoaderManag
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         Log.e(LOG_TAG, "LOADER DATA: " + DatabaseUtils.dumpCursorToString(data));
 
-        if (data.moveToFirst()) {
-            mCursorLoadedListener = (CursorLoadedListener<Cursor>) getNewDatesGridAdapter(getMonth(), 2016);
-            mCursorLoadedListener.onCursorLoaded(data);
-        }
+        data.moveToFirst();
+
 
         refreshView();
     }
@@ -70,12 +68,26 @@ public class LocalShiftsFragment extends CaldroidFragment implements LoaderManag
         return calendarGridAdapter;
     }
 
-    public void setCursorLoadedListener(CursorLoadedListener<Cursor> listener) {
-        mCursorLoadedListener = listener;
-    }
 
-    public interface CursorLoadedListener<Cursor> {
-        void onCursorLoaded(Cursor cursor);
-    }
+
+
+
 
 }
+
+/**
+ *interface related shit
+ *
+ public interface CursorLoadedListener<Cursor> {
+ void onCursorLoaded(Cursor cursor);
+ }
+ public void setCursorLoadedListener(CursorLoadedListener<Cursor> listener) {
+ mCursorLoadedListener = listener;
+ }
+
+ if (data.moveToFirst()) {
+ mCursorLoadedListener = (CursorLoadedListener<Cursor>) getNewDatesGridAdapter(getMonth(), 2016);
+ mCursorLoadedListener.onCursorLoaded(data);
+ }
+ */
+

@@ -33,6 +33,7 @@ public class LocalShiftCalendar extends AppCompatActivity {
 
         caldroidFragment = new LocalShiftsFragment();
 
+
         if (savedInstanceState != null) {
             caldroidFragment.restoreStatesFromKey(savedInstanceState, CALENDAR_SAVED_STATE);
         } else {

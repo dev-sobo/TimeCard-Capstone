@@ -13,7 +13,6 @@ import com.example.ian.timecardcapstone.R;
 import com.example.ian.timecardcapstone.provider.shift.ShiftColumns;
 import com.roomorama.caldroid.CaldroidGridAdapter;
 
-import java.util.Locale;
 import java.util.Map;
 
 import hirondelle.date4j.DateTime;
@@ -68,11 +67,13 @@ public class CalendarGridAdapter extends CaldroidGridAdapter {
             cellView.setBackgroundColor(resources.getColor(R.color.caldroid_gray));
         }
         if (mCursor != null) {
-            if (mCursor.moveToFirst()) {
+            if (mCursor.moveToLast()) {
                 int cursorToday = mCursor.getInt(mCursor.getColumnIndex(ShiftColumns.DAY_OF_MONTH));
                 Log.e(LOG_TAG, "TODAY: " + getToday().getDay());
                 if (cursorToday == dateTime.getDay()) {
-                    dateTextView.setText(String.format(Locale.getDefault(),"%td", dateTime.getDay().longValue()));
+                    dateTextView.setText(dateTime.getDay().toString());
+
+
                     dateTextView.setContentDescription(dateTime.getDay().toString());
 
                     startTimeText.setText("START TIME: " + mCursor.getString(mCursor.getColumnIndex(ShiftColumns.START_TIME_HHMM)));

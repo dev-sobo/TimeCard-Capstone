@@ -43,6 +43,7 @@ public class DatabaseHandler {
     public Uri clockIn(DateTime clockInTime) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         Float hourlyPayFloat = 11.25f;
+
         try {
             hourlyPayFloat = Float.valueOf(sharedPreferences.getString(mContext.getResources().getString(R.string.hourlyPay), "11.25"));
         } catch (NumberFormatException exception) {
@@ -60,6 +61,7 @@ public class DatabaseHandler {
         clockInValues.putHourlyPay(hourlyPayFloat);
         long unixTime = (System.currentTimeMillis() / 1000);
         clockInValues.putStartTimeUnix((int) unixTime);
+
 
 
         return mContext.getContentResolver().insert(ShiftColumns.CONTENT_URI, clockInValues.values());
