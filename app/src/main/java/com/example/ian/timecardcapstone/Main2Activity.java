@@ -28,7 +28,7 @@ import android.widget.ToggleButton;
 
 import com.example.ian.timecardcapstone.calendarrosterappsshifts.RosterAppsActivity;
 import com.example.ian.timecardcapstone.calenderlocalshifts.LocalShiftCalendar;
-import com.example.ian.timecardcapstone.data.MyIntentService;
+import com.example.ian.timecardcapstone.data.RosterAppsLoginIntentService;
 import com.example.ian.timecardcapstone.provider.shift.ShiftColumns;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -61,6 +61,8 @@ public class Main2Activity extends AppCompatActivity
     private TextView currentShiftHrsWrked;
     private TextView currentShiftGrossPay;
     private ArrayMap<Integer, String> emailPassMap = new ArrayMap<>();
+    private Button loginPageButton;
+
     TextView.OnEditorActionListener listener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
@@ -74,7 +76,9 @@ public class Main2Activity extends AppCompatActivity
                 handled = true;
             }
             if (handled) {
-                MyIntentService.startActionkLoginRosterapps(Main2Activity.this, emailPassMap.get(ROSTERAPPS_EMAIL_KEY), emailPassMap.get(ROSTERAPPS_PASS_KEY));
+                RosterAppsLoginIntentService.startActionLoginRosterapps(Main2Activity.this,
+                        emailPassMap.get(ROSTERAPPS_EMAIL_KEY),
+                        emailPassMap.get(ROSTERAPPS_PASS_KEY));
             }
 
             return handled;
@@ -98,10 +102,21 @@ public class Main2Activity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         AdView adView = (AdView) findViewById(R.id.bannerAd);
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice("89C1C45775C35F9B96807A0DD84FAA1D").build();
+        AdRequest adRequest = new AdRequest.Builder().
+                addTestDevice("89C1C45775C35F9B96807A0DD84FAA1D").build();
         if (adView != null) {
             adView.loadAd(adRequest);
         }
+
+        loginPageButton = (Button) findViewById(R.id.loginButton);
+        final Intent intent = new Intent(Main2Activity.this, LoginActivity.class);
+        loginPageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(intent);
+
+            }
+        });
 
         app = (TimeCardAnalytics) getApplication();
         mTracker = app.getDefaultTracker();
@@ -120,7 +135,8 @@ public class Main2Activity extends AppCompatActivity
         testLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MyIntentService.startActionkLoginRosterapps(Main2Activity.this, "ian.sobocinski@jetblue.com", "Thisisforthezoos.");
+                RosterAppsLoginIntentService.startActionLoginRosterapps(Main2Activity.this, "ian.sobocinski@jetblue.com",
+                        "Thisisforthezoos.");
             }
         });
         currentShiftStart = (TextView) findViewById(R.id.currentShiftStart);

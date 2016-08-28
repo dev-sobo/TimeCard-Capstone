@@ -23,8 +23,6 @@ public class RosterappsFragment extends CaldroidFragment {
     private int _weekdayGridViewSize = 0;
 
     public RosterappsFragment() {
-
-
     }
 
     public static int getHeights() {
@@ -36,8 +34,6 @@ public class RosterappsFragment extends CaldroidFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
     }
 
     @Override

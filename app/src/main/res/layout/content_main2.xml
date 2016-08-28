@@ -109,5 +109,14 @@
         android:hint="@string/rosterapps_password"
         android:imeOptions="flagNavigateNext|actionDone"/>
 
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="loginpage"
+        android:id="@+id/loginButton"
+        android:layout_above="@+id/ClockInClockOutid"
+        android:layout_toStartOf="@+id/currentShiftStart" />
+
 
 </RelativeLayout>

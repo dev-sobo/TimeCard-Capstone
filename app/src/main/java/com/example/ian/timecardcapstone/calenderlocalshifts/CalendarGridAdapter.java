@@ -19,6 +19,8 @@ import hirondelle.date4j.DateTime;
 
 
 @SuppressWarnings("deprecation")
+
+
 public class CalendarGridAdapter extends CaldroidGridAdapter {
     private static final String LOG_TAG = CalendarGridAdapter.class.getSimpleName();
     private Cursor mCursor;
@@ -89,6 +91,4 @@ public class CalendarGridAdapter extends CaldroidGridAdapter {
         }
         return cellView;
     }
-
-
 }

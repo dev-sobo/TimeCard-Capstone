@@ -25,7 +25,7 @@ import java.util.Map;
  * TODO: Customize class - update intent actions, extra parameters and static
  * helper methods.
  */
-public class MyIntentService extends IntentService {
+public class RosterAppsLoginIntentService extends IntentService {
     public final static String userAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101 Firefox/45.0";
     public final static String rosterappsLogin = "https://jetblue.rosterapps.com/Login.aspx?ReturnUrl=/";
     public final static String rosterAppsCalender = "https://jetblue.rosterapps.com/calendar.month.aspx";
@@ -37,7 +37,7 @@ public class MyIntentService extends IntentService {
     public final static String txtUsername = "txtUsername";
     public final static String txtPassword = "txtPassword";
     public final static String btnLogin = "btnLogin";
-    public final static String LOG_TAG = MyIntentService.class.getSimpleName();
+    public final static String LOG_TAG = RosterAppsLoginIntentService.class.getSimpleName();
 
     // TODO: Rename actions, choose action names that describe tasks that this
     // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
@@ -49,8 +49,8 @@ public class MyIntentService extends IntentService {
     private static final String EXTRA_PASSWORD = "com.example.ian.timecardcapstone.data.extra.PARAM2";
     private static Context mContext;
 
-    public MyIntentService() {
-        super("MyIntentService");
+    public RosterAppsLoginIntentService() {
+        super("RosterAppsLoginIntentService");
     }
 
     /**
@@ -59,31 +59,16 @@ public class MyIntentService extends IntentService {
      *
      * @see IntentService
      */
-    // TODO: Customize helper method
-    public static void startActionkLoginRosterapps(Context context, String username, String password) {
-        Intent intent = new Intent(context, MyIntentService.class);
+
+    public static void startActionLoginRosterapps(Context context, String username, String password) {
+        Intent intent = new Intent(context, RosterAppsLoginIntentService.class);
         intent.setAction(ACTION_LOGIN_ROSTERAPPS);
         intent.putExtra(EXTRA_USERNAME, username);
         intent.putExtra(EXTRA_PASSWORD, password);
         context.startService(intent);
         mContext = context;
-
     }
 
-    /**
-     * Starts this service to perform action Baz with the given parameters. If
-     * the service is already performing a task this action will be queued.
-     *
-     * @see IntentService
-     */
-    // TODO: Customize helper method
-    public static void startActionBaz(Context context, String param1, String param2) {
-        Intent intent = new Intent(context, MyIntentService.class);
-        intent.setAction(ACTION_BAZ);
-        intent.putExtra(EXTRA_USERNAME, param1);
-        intent.putExtra(EXTRA_PASSWORD, param2);
-        context.startService(intent);
-    }
 // TODO: Implement a user interface to allow the user to input their username and password, and that is passed into this service via an intent
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -92,21 +77,22 @@ public class MyIntentService extends IntentService {
             if (ACTION_LOGIN_ROSTERAPPS.equals(action)) {
                 final String param1 = intent.getStringExtra(EXTRA_USERNAME);
                 final String param2 = intent.getStringExtra(EXTRA_PASSWORD);
-                organizeShiftHTMLData(handleActionRosterappsLogin(param1, param2));
-            } else if (ACTION_BAZ.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_USERNAME);
-                final String param2 = intent.getStringExtra(EXTRA_PASSWORD);
-                handleActionBaz(param1, param2);
+                Document returnedHTMLRosterAppsData = handleActionRosterappsLogin(param1, param2);
+                if (returnedHTMLRosterAppsData != null) {
+                    String HTMLRosterAppsText = returnedHTMLRosterAppsData.text();
+                    if (HTMLRosterAppsText.contains("Forgot")){
+
+                    }
+                    organizeShiftHTMLData(returnedHTMLRosterAppsData);
+
+                }
+
             }
         }
     }
 // TODO: Get the HTML string from logging into Rosterapps. Organize the HTML data, sorting out all of the shift data to be organized week by week
     /**
      * Log into Rosterapps with the provided user name and password, and get back the HTML data from the calendar
-     *
-     *
-     *
-     *
      */
     private Document handleActionRosterappsLogin(String username, String password) {
         try {
@@ -123,7 +109,7 @@ public class MyIntentService extends IntentService {
                     .method(Connection.Method.POST)
                     .execute();
             Map<String, String> loginCookie = loginResponse.cookies();
-            System.out.print("COOKIES: " + loginCookie.toString());
+            Log.d(LOG_TAG, "COOKIES: " + loginCookie.toString());
             //  Log.i(LOG_TAG," LOGIN_RESPONSE: " + loginResponse.parse().html());
             Document calendarDocument = Jsoup.connect(rosterAppsCalender)
                     .userAgent(userAgent)
@@ -187,13 +173,4 @@ public class MyIntentService extends IntentService {
 
     }
 
-
-    /**
-     * Handle action Baz in the provided background thread with the provided
-     * parameters.
-     */
-    private void handleActionBaz(String param1, String param2) {
-        // TODO: Handle action Baz
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
 }

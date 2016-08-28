@@ -15,7 +15,15 @@ import com.example.ian.timecardcapstone.provider.shift.ShiftColumns;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidGridAdapter;
 
+/* need to rework entire local shift system.
+   User should be able to clock in, and clock out even upon the app being closed.
+   This may require the clocking in and clocking out information to be saved to a file.
+   The clocking in and clocking out system should also take into account if the shift being worked currently
+   is a supervisor shift or not.
 
+   Is it possible to merge both of the calendar systems into one? How would I go about doing this.... and how to represent it?
+
+*/
 public class LocalShiftsFragment extends CaldroidFragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int LOADER_ID = 1;
     private static final String LOG_TAG = CaldroidFragment.class.getSimpleName();
