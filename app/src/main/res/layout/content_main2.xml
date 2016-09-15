@@ -87,36 +87,14 @@
         android:layout_below="@+id/currentShiftHrsWrked"
         android:layout_centerHorizontal="true"/>
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:ems="10"
-        android:id="@+id/rosterAppsEmail"
-        android:layout_below="@+id/currentShiftGrossPay"
-        android:layout_centerHorizontal="true"
-        android:hint="@string/rosterapps_login_e_mail"
-        android:imeOptions="actionNext"/>
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:id="@+id/rosterAppsPassword"
-        android:layout_below="@+id/rosterAppsEmail"
-        android:layout_centerHorizontal="true"
-        android:hint="@string/rosterapps_password"
-        android:imeOptions="flagNavigateNext|actionDone"/>
-
     <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="loginpage"
         android:id="@+id/loginButton"
-        android:layout_above="@+id/ClockInClockOutid"
-        android:layout_toStartOf="@+id/currentShiftStart" />
+        android:layout_below="@+id/currentShiftGrossPay"
+        android:layout_alignEnd="@+id/button" />
 
 
 </RelativeLayout>

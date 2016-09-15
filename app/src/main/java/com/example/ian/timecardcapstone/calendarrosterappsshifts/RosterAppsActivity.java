@@ -4,7 +4,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +21,7 @@ import com.roomorama.caldroid.CaldroidListener;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class RosterAppsActivity extends AppCompatActivity implements RosterAppsDetailFragment.OnFragmentInteractionListener {
 
@@ -34,25 +37,34 @@ public class RosterAppsActivity extends AppCompatActivity implements RosterAppsD
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_roster_apps);
+        Calendar calendar = Calendar.getInstance();
+        Toolbar rosterappsToolbar = (Toolbar) findViewById(R.id.rosterapps_toolbar);
+        setSupportActionBar(rosterappsToolbar);
+        ActionBar actionBar = getSupportActionBar();
+
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setTitle(calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()));
+        }
 
         fragmentManager = getSupportFragmentManager();
-
         mTracker = Main2Activity.app.getDefaultTracker();
-
         mRosterappsFragment = new RosterappsFragment();
 
         if (savedInstanceState != null) {
             mRosterappsFragment.restoreStatesFromKey(savedInstanceState, ROSTER_APPS_SAVED_STATE);
         } else {
             Bundle calArgs = new Bundle();
-            Calendar calendar = Calendar.getInstance();
+
             calArgs.putInt(CaldroidFragment.MONTH, calendar.get(Calendar.MONTH) + 1);
             calArgs.putInt(CaldroidFragment.YEAR, calendar.get(Calendar.YEAR));
             calArgs.putBoolean(CaldroidFragment.ENABLE_SWIPE, false);
             calArgs.putBoolean(CaldroidFragment.SIX_WEEKS_IN_CALENDAR, true);
             calArgs.putBoolean(CaldroidFragment.SQUARE_TEXT_VIEW_CELL, true);
             calArgs.putBoolean(CaldroidFragment.SHOW_NAVIGATION_ARROWS, false);
-
+           // Log.i(LOG_TAG, "TESTING RESOURCE ID CRASH: RESOURCE ID: " + calendar.get(Calendar.MONTH));
+//calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())
             mRosterappsFragment.setArguments(calArgs);
         }
         final FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction()

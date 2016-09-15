@@ -41,6 +41,9 @@ public class RosterappsFragment extends CaldroidFragment {
                              Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         View littleView = inflater.inflate(R.layout.fragment_rosterapps, container, false);
+     /*   if (rootView != null) {
+            rootView.setPadding(0, 0, 0, R.attr.actionBarSize);
+        }*/
         // Inflate the layout for this fragment
 
         monthTitleTextView = getMonthTitleTextView();

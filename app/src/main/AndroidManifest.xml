@@ -51,12 +51,15 @@
             android:name=".data.RosterAppsLoginIntentService"
             android:exported="false" />
 
-        <activity android:name=".calenderlocalshifts.LocalShiftCalendar" />
-        <activity android:name=".calendarrosterappsshifts.RosterAppsActivity"></activity>
+        <activity android:name=".calenderlocalshifts.LocalShiftCalendarActivity"
+            android:parentActivityName=".Main2Activity"/>
+        <activity android:name=".calendarrosterappsshifts.RosterAppsActivity"
+            android:parentActivityName=".Main2Activity"/>
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
-            android:parentActivityName=".Main2Activity">
+            android:parentActivityName=".Main2Activity"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.ian.timecardcapstone.Main2Activity" />

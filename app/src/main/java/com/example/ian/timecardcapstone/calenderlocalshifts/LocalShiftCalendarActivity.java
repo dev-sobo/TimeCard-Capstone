@@ -13,9 +13,9 @@ import com.roomorama.caldroid.CaldroidFragment;
 
 import java.util.Calendar;
 
-public class LocalShiftCalendar extends AppCompatActivity {
+public class LocalShiftCalendarActivity extends AppCompatActivity {
     private static final String CALENDAR_SAVED_STATE = "CALDROID_SAVED_STATE";
-    private static final String LOG_TAG = LocalShiftCalendar.class.getSimpleName();
+    private static final String LOG_TAG = LocalShiftCalendarActivity.class.getSimpleName();
     private LocalShiftsFragment caldroidFragment;
     private Tracker mTracker;
 
@@ -27,6 +27,7 @@ public class LocalShiftCalendar extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.local_calendar_toolbar);
         setSupportActionBar(toolbar);
+
 
         mTracker = Main2Activity.app.getDefaultTracker();
 

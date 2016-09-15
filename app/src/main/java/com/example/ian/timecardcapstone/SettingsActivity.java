@@ -17,6 +17,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+
         mTracker = Main2Activity.app.getDefaultTracker();
 
         getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment())

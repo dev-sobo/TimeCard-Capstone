@@ -16,18 +16,15 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.example.ian.timecardcapstone.calendarrosterappsshifts.RosterAppsActivity;
-import com.example.ian.timecardcapstone.calenderlocalshifts.LocalShiftCalendar;
+import com.example.ian.timecardcapstone.calenderlocalshifts.LocalShiftCalendarActivity;
 import com.example.ian.timecardcapstone.data.RosterAppsLoginIntentService;
 import com.example.ian.timecardcapstone.provider.shift.ShiftColumns;
 import com.google.android.gms.ads.AdRequest;
@@ -62,8 +59,11 @@ public class Main2Activity extends AppCompatActivity
     private TextView currentShiftGrossPay;
     private ArrayMap<Integer, String> emailPassMap = new ArrayMap<>();
     private Button loginPageButton;
+    private static final String shiftBoolKey = "BOOL_KEY";
+    private static final String uriParcelKey = "URI_KEY";
+    private boolean shiftButtonBool;
 
-    TextView.OnEditorActionListener listener = new TextView.OnEditorActionListener() {
+    /*TextView.OnEditorActionListener listener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
             boolean handled = false;
@@ -84,7 +84,15 @@ public class Main2Activity extends AppCompatActivity
             return handled;
         }
 
-    };
+    };*/
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        clockedInUri = savedInstanceState.getParcelable(uriParcelKey);
+        shiftButtonBool = savedInstanceState.getBoolean(shiftBoolKey);
+        Log.i(LOG_TAG, "RESTORED CLOCKED IN URI: " + clockedInUri.toString());
+    }
 
     @Override
     protected void onResume() {
@@ -92,6 +100,14 @@ public class Main2Activity extends AppCompatActivity
         Log.i(LOG_TAG, "SETTING SCREENANME");
         mTracker.setScreenName("MAIN_ACTIVITY");
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(uriParcelKey, clockedInUri);
+        outState.putBoolean(shiftBoolKey, shiftButtonBool);
+        Log.i(LOG_TAG, "SAVED CLOCKED IN URI: " + clockedInUri);
     }
 
     // DateTime dateTime;
@@ -108,6 +124,7 @@ public class Main2Activity extends AppCompatActivity
             adView.loadAd(adRequest);
         }
 
+        // TODO: Put the login page button on the app drawer
         loginPageButton = (Button) findViewById(R.id.loginButton);
         final Intent intent = new Intent(Main2Activity.this, LoginActivity.class);
         loginPageButton.setOnClickListener(new View.OnClickListener() {
@@ -121,12 +138,12 @@ public class Main2Activity extends AppCompatActivity
         app = (TimeCardAnalytics) getApplication();
         mTracker = app.getDefaultTracker();
 
-        EditText rosterAppsEmail = (EditText) findViewById(R.id.rosterAppsEmail);
+/*        EditText rosterAppsEmail = (EditText) findViewById(R.id.rosterAppsEmail);
         EditText rosterAppsPassword = (EditText) findViewById(R.id.rosterAppsPassword);
         if (rosterAppsEmail != null ) {
             rosterAppsEmail.setOnEditorActionListener(listener);
             rosterAppsPassword.setOnEditorActionListener(listener);
-        }
+        }*/
 
 
 
@@ -150,15 +167,15 @@ public class Main2Activity extends AppCompatActivity
         clockInClockOutButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
+                shiftButtonBool = b;
+                if (shiftButtonBool) {
                     Log.e(LOG_TAG, "CLOCKED IN! \n");
                     databaseHandler = new DatabaseHandler(getApplicationContext());
 
                     clockedInUri = databaseHandler.clockIn(DateTime.now(TimeZone.getDefault()));
                     getSupportLoaderManager().initLoader(MAIN_ACT_LOADER_ID, null, Main2Activity.this);
 
-
-                } else if (!b) {
+                } else if (!shiftButtonBool) {
 
                     Log.e(LOG_TAG, "CLOCKED OUT! \n");
                     int numRowsUpdated = databaseHandler.clockOut(clockedInUri, DateTime.now(TimeZone.getDefault()));
@@ -267,9 +284,10 @@ public class Main2Activity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        Intent startCalendarActivity = new Intent(this, LocalShiftCalendar.class);
+        Intent startCalendarActivity = new Intent(this, LocalShiftCalendarActivity.class);
         Intent startRosterAppsActivity = new Intent(this, RosterAppsActivity.class);
         Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
+        Intent startLoginActivity = new Intent(this, LoginActivity.class);
         if (id == R.id.rosterapps_calendar) {
             startActivity(startRosterAppsActivity);
             return true;
@@ -278,6 +296,9 @@ public class Main2Activity extends AppCompatActivity
             return true;
         } else if (id == R.id.nav_settings) {
             startActivity(startSettingsActivity);
+            return true;
+        } else if (id == R.id.nav_login) {
+            startActivity(startLoginActivity);
             return true;
         }
 
