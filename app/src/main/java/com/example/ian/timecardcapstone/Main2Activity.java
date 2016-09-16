@@ -63,28 +63,6 @@ public class Main2Activity extends AppCompatActivity
     private static final String uriParcelKey = "URI_KEY";
     private boolean shiftButtonBool;
 
-    /*TextView.OnEditorActionListener listener = new TextView.OnEditorActionListener() {
-        @Override
-        public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-            boolean handled = false;
-            if (i == EditorInfo.IME_ACTION_NEXT) {
-                emailPassMap.put(ROSTERAPPS_EMAIL_KEY, String.valueOf(textView.getText()));
-            }
-
-            if (i == EditorInfo.IME_ACTION_DONE) {
-                emailPassMap.put(ROSTERAPPS_PASS_KEY, String.valueOf(textView.getText()));
-                handled = true;
-            }
-            if (handled) {
-                RosterAppsLoginIntentService.startActionLoginRosterapps(Main2Activity.this,
-                        emailPassMap.get(ROSTERAPPS_EMAIL_KEY),
-                        emailPassMap.get(ROSTERAPPS_PASS_KEY));
-            }
-
-            return handled;
-        }
-
-    };*/
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
@@ -163,45 +141,71 @@ public class Main2Activity extends AppCompatActivity
         currentShiftGrossPay = (TextView) findViewById(R.id.currentShiftGrossPay);
 
         ToggleButton clockInClockOutButton = (ToggleButton) findViewById(R.id.ClockInClockOutid);
-        assert clockInClockOutButton != null;
-        clockInClockOutButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                shiftButtonBool = b;
-                if (shiftButtonBool) {
-                    Log.e(LOG_TAG, "CLOCKED IN! \n");
-                    databaseHandler = new DatabaseHandler(getApplicationContext());
 
-                    clockedInUri = databaseHandler.clockIn(DateTime.now(TimeZone.getDefault()));
-                    getSupportLoaderManager().initLoader(MAIN_ACT_LOADER_ID, null, Main2Activity.this);
+        /* This is where clocking in and clocking out is handled.
+            user clocks in, the system records the current time and date, inserts it into a row using the
+            databasehandler class. it inserts:
+         * Current day
+         * Current Time in hh:mm format
+         * Current Time in UNIX format
+         * Current month
+         * Current day of week
+         * Current year
+         * Hourly Pay
+            into the row.
+            Then, a row URI is returned. This URI is used to clock out the user, and inserts the following data into
+            the same row:
 
-                } else if (!shiftButtonBool) {
 
-                    Log.e(LOG_TAG, "CLOCKED OUT! \n");
-                    int numRowsUpdated = databaseHandler.clockOut(clockedInUri, DateTime.now(TimeZone.getDefault()));
-                    Log.i(LOG_TAG, "NUMBER OF ROWS UPDATED: " + numRowsUpdated);
+        */
 
-                    Cursor returnedUri = getContentResolver().query(clockedInUri, null, null, null, null);
+        /**
+         *
+         *
+         */
+        if (clockInClockOutButton != null) {
+            clockInClockOutButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    shiftButtonBool = b;
+                    if (shiftButtonBool) {
+                        Log.e(LOG_TAG, "CLOCKED IN! \n");
+                        ClockInOutService.startClockIn(getApplicationContext());
 
-                    if (returnedUri != null) {
-                        returnedUri.moveToFirst();
-                        int columnTotal = returnedUri.getColumnCount();
-                        Log.i(LOG_TAG, "CLOCKED OUT CONTENTS OF MOST RECENT CLOCKED IN URI: " + DatabaseUtils.dumpCursorToString(returnedUri));
+                        databaseHandler = new DatabaseHandler(getApplicationContext());
+
+
+                        clockedInUri = databaseHandler.clockIn(DateTime.now(TimeZone.getDefault()));
+                        getSupportLoaderManager().initLoader(MAIN_ACT_LOADER_ID, null, Main2Activity.this);
+
+                    } else if (!shiftButtonBool) {
+
+                        Log.e(LOG_TAG, "CLOCKED OUT! \n");
+                        int numRowsUpdated = databaseHandler.clockOut(clockedInUri, DateTime.now(TimeZone.getDefault()));
+                        Log.i(LOG_TAG, "NUMBER OF ROWS UPDATED: " + numRowsUpdated);
+
+                        Cursor returnedUri = getContentResolver().query(clockedInUri, null, null, null, null);
+
+                        if (returnedUri != null) {
+                            returnedUri.moveToFirst();
+                            int columnTotal = returnedUri.getColumnCount();
+                            Log.i(LOG_TAG, "CLOCKED OUT CONTENTS OF MOST RECENT CLOCKED IN URI: " + DatabaseUtils.dumpCursorToString(returnedUri));
+                        }
+
+                        Cursor entireTable = getContentResolver().query(ShiftColumns.CONTENT_URI, null, null, null, null);
+
+                        if (entireTable != null) {
+                            entireTable.moveToFirst();
+                            Log.i(LOG_TAG, "ENTIRE CLOCKED OUT TABLE CURSOR: " + DatabaseUtils.dumpCursorToString(entireTable));
+
+                            entireTable.close();
+                        }
+
+
                     }
-
-                    Cursor entireTable = getContentResolver().query(ShiftColumns.CONTENT_URI, null, null, null, null);
-
-                    if (entireTable != null) {
-                        entireTable.moveToFirst();
-                        Log.i(LOG_TAG, "ENTIRE CLOCKED OUT TABLE CURSOR: " + DatabaseUtils.dumpCursorToString(entireTable));
-
-                        entireTable.close();
-                    }
-
-
                 }
-            }
-        });
+            });
+        }
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

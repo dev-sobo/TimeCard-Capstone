@@ -67,8 +67,20 @@ public class DatabaseHandler {
         return mContext.getContentResolver().insert(ShiftColumns.CONTENT_URI, clockInValues.values());
     }
 
+    /**
+     * inserts:
+     * the ending System Unix time
+     * Then, a cursor is obtained using the URI, which contains the start and end time, along with the hourly pay.
+     * Number of hours worked is then figured out using the cursor mentioned above.
+     * These number of hours worked are then inserted into the same row, along with the calculated gross pay.
+     *
+     * @param clockInUri    the URI that was originally used to clock in
+     * @param clockOutTime  The time at which the user clocks out
+     * @return number of columns that were updated.
+     */
     public int clockOut(Uri clockInUri, DateTime clockOutTime) {
         ShiftContentValues clockOutValues = new ShiftContentValues();
+
 
         clockOutValues.putEndTimeHhmm(clockOutTime.format("hh:mm"));
         long unixTime = (System.currentTimeMillis() / 1000);
