@@ -1,8 +1,9 @@
 package com.example.ian.timecardcapstone;
 
 import android.app.IntentService;
-import android.content.Intent;
 import android.content.Context;
+import android.content.Intent;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
 import hirondelle.date4j.DateTime;
@@ -98,11 +99,13 @@ public class ClockInOutService extends IntentService {
      * POSSIBLE: show amount of gross money earned thus far in notification or main app UI.
      */
     private void handleClockingIn(DateTime clockedInDateTime, boolean clockedInBoolean) {
-        // TODO: Handle clocking in, setting the service to the foreground and create a persistant notification
-        Log.w(LOG_TAG, "HANDLE CLOCKING IN METHOD DATE TIME: " + clockedInDateTime);
+        // TODO: Handle clocking in,
+
+
+        //TODO: setting the service to the foreground and create a persistant notification
+        NotificationCompat foregroundNotification;
+
     }
-
-
 
     /**
      * Handle action Baz in the provided background thread with the provided
