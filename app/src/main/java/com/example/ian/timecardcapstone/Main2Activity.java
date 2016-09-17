@@ -179,7 +179,12 @@ public class Main2Activity extends AppCompatActivity
                     shiftButtonBool = b;
                     if (shiftButtonBool) {
                         Log.e(LOG_TAG, "CLOCKED IN! \n");
-                        ClockInOutService.startClockIn(getApplicationContext(), DateTime.now(TimeZone.getDefault()), true);
+                       // ClockInOutService.startClockIn(getApplicationContext(), DateTime.now(TimeZone.getDefault()),
+                         //       true);
+                        Intent intent1 = new Intent(Main2Activity.this, ForegroundService.class);
+                        intent1.putExtra("current_datetime",DateTime.now(TimeZone.getDefault()));
+                        intent1.putExtra("clocked_bool",true);
+                        startService(intent1);
 
                         databaseHandler = new DatabaseHandler(getApplicationContext());
 

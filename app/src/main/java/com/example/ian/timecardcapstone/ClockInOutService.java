@@ -1,10 +1,13 @@
 package com.example.ian.timecardcapstone;
 
 import android.app.IntentService;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.NotificationCompat;
 import android.util.Log;
+
+import java.util.Locale;
 
 import hirondelle.date4j.DateTime;
 
@@ -26,6 +29,7 @@ public class ClockInOutService extends IntentService {
     private static final String EXTRA_CLOCKED_BOOL = "com.example.ian.timecardcapstone.extra.PARAM2";
 
     private static final String LOG_TAG = ClockInOutService.class.getSimpleName();
+    private static final int ONGOING_NOTIFICATION_ID = 1;
     private static boolean CLOCKED_IN = false;
     private static DateTime CLOCKED_IN_DATETIME;
     private static DateTime CLOCKED_OUT_DATETIME;
@@ -70,10 +74,12 @@ public class ClockInOutService extends IntentService {
         context.startService(intent);
     }
 
+
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             final String action = intent.getAction();
+
             if (ACTION_CLOCK_IN.equals(action)) {
                 final DateTime currentClockInDateTime = (DateTime) intent.getSerializableExtra(EXTRA_CUR_CLOCKIN_DATETIME);
                 assert currentClockInDateTime != null;
@@ -89,6 +95,19 @@ public class ClockInOutService extends IntentService {
         }
     }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Intent intent = new Intent(this, Main2Activity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 ,intent, 0);
+        Notification notification = new Notification.Builder(this)
+                .setSmallIcon(R.drawable.perm_group_system_clock)
+                .setContentInfo("testing")
+                .setContentText("foreground")
+                .setContentIntent(pendingIntent).build();
+        startForeground(4, notification);
+    }
+
     /**
      *
      *
@@ -99,13 +118,28 @@ public class ClockInOutService extends IntentService {
      * POSSIBLE: show amount of gross money earned thus far in notification or main app UI.
      */
     private void handleClockingIn(DateTime clockedInDateTime, boolean clockedInBoolean) {
+        Context context = this;
+        Notification ongoingNotif;
         // TODO: Handle clocking in,
 
-
+        Log.e(LOG_TAG, "in handle clocking in");
         //TODO: setting the service to the foreground and create a persistant notification
-        NotificationCompat foregroundNotification;
+        String formattedClockInTime = clockedInDateTime.format("MM-DD-YYY hh:mm", Locale.getDefault());
+        Intent clockedInIntent = new Intent(context, Main2Activity.class);
+        PendingIntent pendingClockedIntent = PendingIntent.getActivity(context, 0,
+                clockedInIntent, 0);
+        Notification.Builder builder = new Notification.Builder(this)
+                .setSmallIcon(R.drawable.perm_group_system_clock)
+                .setContentTitle("clocked in")
+                .setContentText(formattedClockInTime)
+                .setContentIntent(pendingClockedIntent);
+        ongoingNotif = builder.build();
+        this.startForeground(2, ongoingNotif);
+        /*NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(1, ongoingNotif);*/
 
     }
+
 
     /**
      * Handle action Baz in the provided background thread with the provided
