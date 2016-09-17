@@ -3,6 +3,9 @@ package com.example.ian.timecardcapstone;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
+import android.util.Log;
+
+import hirondelle.date4j.DateTime;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -14,15 +17,17 @@ import android.content.Context;
 public class ClockInOutService extends IntentService {
     // TODO: Rename actions, choose action names that describe tasks that this
     // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
-    private static final String ACTION_FOO = "com.example.ian.timecardcapstone.action.FOO";
-    private static final String ACTION_BAZ = "com.example.ian.timecardcapstone.action.BAZ";
+    private static final String ACTION_CLOCK_IN = "com.example.ian.timecardcapstone.action.FOO";
+    private static final String ACTION_CLOCK_OUT = "com.example.ian.timecardcapstone.action.BAZ";
 
     // TODO: Rename parameters
-    private static final String EXTRA_PARAM1 = "com.example.ian.timecardcapstone.extra.PARAM1";
-    private static final String EXTRA_PARAM2 = "com.example.ian.timecardcapstone.extra.PARAM2";
+    private static final String EXTRA_CUR_CLOCKIN_DATETIME = "com.example.ian.timecardcapstone.extra.PARAM1";
+    private static final String EXTRA_CLOCKED_BOOL = "com.example.ian.timecardcapstone.extra.PARAM2";
 
     private static final String LOG_TAG = ClockInOutService.class.getSimpleName();
     private static boolean CLOCKED_IN = false;
+    private static DateTime CLOCKED_IN_DATETIME;
+    private static DateTime CLOCKED_OUT_DATETIME;
 
 
     public ClockInOutService() {
@@ -36,12 +41,15 @@ public class ClockInOutService extends IntentService {
      * @see IntentService
      */
     // TODO: Customize helper method
-    public static void startClockIn(Context context, String param1, String param2) {
+    public static void startClockIn(Context context, DateTime clockedInTime, boolean clockedInBool) {
         Intent intent = new Intent(context, ClockInOutService.class);
-        intent.setAction(ACTION_FOO);
-        intent.putExtra(EXTRA_PARAM1, param1);
-        intent.putExtra(EXTRA_PARAM2, param2);
-        CLOCKED_IN = true;
+        intent.setAction(ACTION_CLOCK_IN);
+        intent.putExtra(EXTRA_CUR_CLOCKIN_DATETIME, clockedInTime);
+        intent.putExtra(EXTRA_CLOCKED_BOOL, clockedInBool);
+        CLOCKED_IN = clockedInBool;
+        CLOCKED_IN_DATETIME = clockedInTime;
+        Log.w(LOG_TAG, "CLOCKED IN TIME: " + CLOCKED_IN_DATETIME);
+
         context.startService(intent);
 
     }
@@ -55,9 +63,9 @@ public class ClockInOutService extends IntentService {
     // TODO: Customize helper method
     public static void startClockOut(Context context, String param1, String param2) {
         Intent intent = new Intent(context, ClockInOutService.class);
-        intent.setAction(ACTION_BAZ);
-        intent.putExtra(EXTRA_PARAM1, param1);
-        intent.putExtra(EXTRA_PARAM2, param2);
+        intent.setAction(ACTION_CLOCK_OUT);
+        intent.putExtra(EXTRA_CUR_CLOCKIN_DATETIME, param1);
+        intent.putExtra(EXTRA_CLOCKED_BOOL, param2);
         context.startService(intent);
     }
 
@@ -65,32 +73,42 @@ public class ClockInOutService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             final String action = intent.getAction();
-            if (ACTION_FOO.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-                handleActionFoo(param1, param2);
-            } else if (ACTION_BAZ.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-                handleActionBaz(param1, param2);
+            if (ACTION_CLOCK_IN.equals(action)) {
+                final DateTime currentClockInDateTime = (DateTime) intent.getSerializableExtra(EXTRA_CUR_CLOCKIN_DATETIME);
+                assert currentClockInDateTime != null;
+                final boolean CLOCKED_IN_BOOL = intent.getBooleanExtra(EXTRA_CLOCKED_BOOL, false);
+                handleClockingIn(currentClockInDateTime, CLOCKED_IN_BOOL);
+
+
+            } else if (ACTION_CLOCK_OUT.equals(action)) {
+                final String param1 = intent.getStringExtra(EXTRA_CUR_CLOCKIN_DATETIME);
+                final String param2 = intent.getStringExtra(EXTRA_CLOCKED_BOOL);
+                handleClockingOut(param1, param2);
             }
         }
     }
 
     /**
-     * Handle action Foo in the provided background thread with the provided
-     * parameters.
+     *
+     *
+     * Handle clocking in, setting the service to the foreground
+     * and create a persistent notification that shows user's clock in time, if possible update in realtime,
+     * and provides a notification action for clocking out.
+     *
+     * POSSIBLE: show amount of gross money earned thus far in notification or main app UI.
      */
-    private void handleActionFoo(String param1, String param2) {
-        // TODO: Handle action Foo
-        throw new UnsupportedOperationException("Not yet implemented");
+    private void handleClockingIn(DateTime clockedInDateTime, boolean clockedInBoolean) {
+        // TODO: Handle clocking in, setting the service to the foreground and create a persistant notification
+        Log.w(LOG_TAG, "HANDLE CLOCKING IN METHOD DATE TIME: " + clockedInDateTime);
     }
+
+
 
     /**
      * Handle action Baz in the provided background thread with the provided
      * parameters.
      */
-    private void handleActionBaz(String param1, String param2) {
+    private void handleClockingOut(String param1, String param2) {
         // TODO: Handle action Baz
         throw new UnsupportedOperationException("Not yet implemented");
     }

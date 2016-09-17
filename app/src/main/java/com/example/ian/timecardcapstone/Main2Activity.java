@@ -160,7 +160,16 @@ public class Main2Activity extends AppCompatActivity
         */
 
         /**
+         *  Upon clocking in, the UI should change to a view
+         *  showing the time clocked in,
+         *  how many hours worked in real time,
+         *  as well as how much money grossed.
          *
+         *  POSSIBLE: implement the logic to grab the RosterApps data to compare the current shift worked
+         *  with what is scheduled on their RosterApps, and if it's a supervisor shift or not.
+         *  Also could implement the logic that any time worked over the RosterApps-scheduled/reported
+         *  shift is eligble for overtime,
+         *  as well as reminding the user to be extended on their rosterapps.
          *
          */
         if (clockInClockOutButton != null) {
@@ -170,7 +179,7 @@ public class Main2Activity extends AppCompatActivity
                     shiftButtonBool = b;
                     if (shiftButtonBool) {
                         Log.e(LOG_TAG, "CLOCKED IN! \n");
-                        ClockInOutService.startClockIn(getApplicationContext());
+                        ClockInOutService.startClockIn(getApplicationContext(), DateTime.now(TimeZone.getDefault()), true);
 
                         databaseHandler = new DatabaseHandler(getApplicationContext());
 
