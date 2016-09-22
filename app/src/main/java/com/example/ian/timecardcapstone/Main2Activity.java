@@ -181,10 +181,11 @@ public class Main2Activity extends AppCompatActivity
                         Log.e(LOG_TAG, "CLOCKED IN! \n");
                        // ClockInOutService.startClockIn(getApplicationContext(), DateTime.now(TimeZone.getDefault()),
                          //       true);
-                        Intent intent1 = new Intent(Main2Activity.this, ForegroundService.class);
-                        intent1.putExtra("current_datetime",DateTime.now(TimeZone.getDefault()));
-                        intent1.putExtra("clocked_bool",true);
-                        startService(intent1);
+                        Intent clockInIntent = new Intent(Main2Activity.this, ForegroundService.class);
+
+                        clockInIntent.putExtra("current_datetime",DateTime.now(TimeZone.getDefault()));
+                        clockInIntent.putExtra("clocked_bool",true);
+                        ForegroundService.startClockIn(Main2Activity.this, DateTime.now(TimeZone.getDefault()), true);
 
                         databaseHandler = new DatabaseHandler(getApplicationContext());
 

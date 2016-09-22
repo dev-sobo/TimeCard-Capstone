@@ -58,4 +58,6 @@
     <string name="home">Home</string>
     <string name="ensure_login">Please ensure that you have logged into rosterapps or use the test login</string>
     <string name="login">Login</string>
+    <string name="clockin_uri">com.example.ian.timecardcapstone.clockinuri</string>
+    <string name="clockin_uri_sharedprefkey">com.example.ian.timecardcapstone.clockinurikey</string>
 </resources>

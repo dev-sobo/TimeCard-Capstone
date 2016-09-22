@@ -26,7 +26,7 @@ public class ClockInOutService extends IntentService {
 
     // TODO: Rename parameters
     private static final String EXTRA_CUR_CLOCKIN_DATETIME = "com.example.ian.timecardcapstone.extra.PARAM1";
-    private static final String EXTRA_CLOCKED_BOOL = "com.example.ian.timecardcapstone.extra.PARAM2";
+    private static final String EXTRA_CLOCKED_BOOL_ID = "com.example.ian.timecardcapstone.extra.PARAM2";
 
     private static final String LOG_TAG = ClockInOutService.class.getSimpleName();
     private static final int ONGOING_NOTIFICATION_ID = 1;
@@ -50,7 +50,7 @@ public class ClockInOutService extends IntentService {
         Intent intent = new Intent(context, ClockInOutService.class);
         intent.setAction(ACTION_CLOCK_IN);
         intent.putExtra(EXTRA_CUR_CLOCKIN_DATETIME, clockedInTime);
-        intent.putExtra(EXTRA_CLOCKED_BOOL, clockedInBool);
+        intent.putExtra(EXTRA_CLOCKED_BOOL_ID, clockedInBool);
         CLOCKED_IN = clockedInBool;
         CLOCKED_IN_DATETIME = clockedInTime;
         Log.w(LOG_TAG, "CLOCKED IN TIME: " + CLOCKED_IN_DATETIME);
@@ -70,7 +70,7 @@ public class ClockInOutService extends IntentService {
         Intent intent = new Intent(context, ClockInOutService.class);
         intent.setAction(ACTION_CLOCK_OUT);
         intent.putExtra(EXTRA_CUR_CLOCKIN_DATETIME, param1);
-        intent.putExtra(EXTRA_CLOCKED_BOOL, param2);
+        intent.putExtra(EXTRA_CLOCKED_BOOL_ID, param2);
         context.startService(intent);
     }
 
@@ -83,13 +83,13 @@ public class ClockInOutService extends IntentService {
             if (ACTION_CLOCK_IN.equals(action)) {
                 final DateTime currentClockInDateTime = (DateTime) intent.getSerializableExtra(EXTRA_CUR_CLOCKIN_DATETIME);
                 assert currentClockInDateTime != null;
-                final boolean CLOCKED_IN_BOOL = intent.getBooleanExtra(EXTRA_CLOCKED_BOOL, false);
+                final boolean CLOCKED_IN_BOOL = intent.getBooleanExtra(EXTRA_CLOCKED_BOOL_ID, false);
                 handleClockingIn(currentClockInDateTime, CLOCKED_IN_BOOL);
 
 
             } else if (ACTION_CLOCK_OUT.equals(action)) {
                 final String param1 = intent.getStringExtra(EXTRA_CUR_CLOCKIN_DATETIME);
-                final String param2 = intent.getStringExtra(EXTRA_CLOCKED_BOOL);
+                final String param2 = intent.getStringExtra(EXTRA_CLOCKED_BOOL_ID);
                 handleClockingOut(param1, param2);
             }
         }
