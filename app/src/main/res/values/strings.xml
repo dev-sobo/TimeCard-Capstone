@@ -60,4 +60,6 @@
     <string name="login">Login</string>
     <string name="clockin_uri">com.example.ian.timecardcapstone.clockinuri</string>
     <string name="clockin_uri_sharedprefkey">com.example.ian.timecardcapstone.clockinurikey</string>
+    <string name="clockin_sharedpref_file_key">com.example.ian.timecardcapstone.clockinpreffilekey</string>
+    <string name="clockin_bool_sharedprefkey">com.example.ian.timecardcapstone.clockinboolkey</string>
 </resources>

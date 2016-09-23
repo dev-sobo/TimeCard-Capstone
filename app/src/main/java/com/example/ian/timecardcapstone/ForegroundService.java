@@ -28,7 +28,7 @@ public class ForegroundService extends Service {
     private static final String LOG_TAG = ForegroundService.class.getSimpleName();
     private static final int ONGOING_NOTIFICATION_ID = 2;
   //  private static DateTime CLOCKED_OUT_DATETIME;
-    private static boolean CLOCKED_BOOL;
+    //private static boolean CLOCKED_BOOL;
     private Context mContext;
     private static final String ACTION_CLOCK_IN = "com.example.ian.timecardcapstone.action.CLOCKIN";
     private static final String ACTION_CLOCK_OUT = "com.example.ian.timecardcapstone.action.CLOCKOUT";
@@ -44,7 +44,10 @@ public class ForegroundService extends Service {
         intent.setAction(ACTION_CLOCK_IN);
         intent.putExtra(EXTRA_CUR_CLOCKIN_DATETIME, clockedInTime);
         intent.putExtra(EXTRA_CLOCKED_BOOL_ID, clockInBool);
-        CLOCKED_BOOL = clockInBool;
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.clockin_sharedpref_file_key),Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(context.getString(R.string.clockin_bool_sharedprefkey),clockInBool);
+        editor.commit();
         context.startService(intent);
     }
 
@@ -53,7 +56,11 @@ public class ForegroundService extends Service {
         intent.setAction(ACTION_CLOCK_OUT);
         intent.putExtra(EXTRA_CUR_CLOCKOUT_DATETIME, clockedOutTime);
         intent.putExtra(EXTRA_CLOCKED_BOOL_ID, clockOutBool);
-        CLOCKED_BOOL = clockOutBool;
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.clockin_sharedpref_file_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(context.getString(R.string.clockin_bool_sharedprefkey), clockOutBool);
+        editor.commit();
+
         context.startService(intent);
     }
 
@@ -78,15 +85,14 @@ public class ForegroundService extends Service {
      */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.clockin_uri), Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.clockin_sharedpref_file_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Uri clockInUri;
         if (intent != null) {
             final String action = intent.getAction();
-
             if (ACTION_CLOCK_IN.equals(action)) {
                 final DateTime currentClockInDateTime = (DateTime) intent.getSerializableExtra(EXTRA_CUR_CLOCKIN_DATETIME);
-                //final boolean clockedInBool = intent.getBooleanExtra(EXTRA_CLOCKED_BOOL_ID, false);
+                // Receives the URI from the clockIn operation, and saves it in the Shared Pref file for future use.
                 String clockInString = clockIn(currentClockInDateTime).toString();
                 editor.putString(getString(R.string.clockin_uri_sharedprefkey),
                         clockInString);
@@ -114,7 +120,14 @@ public class ForegroundService extends Service {
      * @return The URI at which the clocked in data was inserted in
      */
     public Uri clockIn(DateTime clockInTime) {
-        if (CLOCKED_BOOL) {
+        SharedPreferences sharedPreferences = getSharedPreferences(this.getString(R.string.clockin_sharedpref_file_key), Context.MODE_PRIVATE);
+        boolean userIsClockedIn;
+        if (sharedPreferences.contains(this.getString(R.string.clockin_bool_sharedprefkey))) {
+            userIsClockedIn = sharedPreferences.getBoolean(this.getString(R.string.clockin_bool_sharedprefkey),true);
+        } else {
+            throw new NullPointerException();
+        }
+        if (userIsClockedIn) {
             // Builds the ongoing notification to keep the service running in the foreground.
             String formattedClockIntime = clockInTime.format("MM-DD-YYYY hh:mm", Locale.getDefault());
             Intent clockedInIntent = new Intent(this, Main2Activity.class);
@@ -131,11 +144,11 @@ public class ForegroundService extends Service {
             this.startForeground(ONGOING_NOTIFICATION_ID, onGoingNotif);
 
             // Actually logs the current DateTime which the user clocks in at
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+            SharedPreferences userSettingsPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
             Float hourlyPayFloat = 11.25f;
 
             try {
-                hourlyPayFloat = Float.valueOf(sharedPreferences.getString(mContext.getResources().getString(R.string.hourlyPay), "11.25"));
+                hourlyPayFloat = Float.valueOf(userSettingsPreferences.getString(mContext.getResources().getString(R.string.hourlyPay), "11.25"));
             } catch (NumberFormatException exception) {
                 Log.e(LOG_TAG, exception.getMessage());
                 Toast.makeText(mContext, "Hourly pay is in invalid format", Toast.LENGTH_SHORT).show();
