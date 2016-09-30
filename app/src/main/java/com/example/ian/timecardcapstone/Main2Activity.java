@@ -1,8 +1,9 @@
 package com.example.ian.timecardcapstone;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -49,8 +50,7 @@ public class Main2Activity extends AppCompatActivity
     private static final int MAIN_ACT_LOADER_ID = 2;
     public static TimeCardAnalytics app;
     private static Uri mClockInRow;
-    private DatabaseHandler databaseHandler;
-    private Uri clockedInUri;
+   // private Uri clockedInUri;
     private Tracker mTracker;
     private TextView currentShiftStart;
     private TextView currentShiftEnd;
@@ -62,14 +62,22 @@ public class Main2Activity extends AppCompatActivity
     private static final String shiftBoolKey = "BOOL_KEY";
     private static final String uriParcelKey = "URI_KEY";
     private boolean shiftButtonBool;
+    private SharedPreferences.OnSharedPreferenceChangeListener shiftBoolChangeListener;
 
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        clockedInUri = savedInstanceState.getParcelable(uriParcelKey);
         shiftButtonBool = savedInstanceState.getBoolean(shiftBoolKey);
-        Log.i(LOG_TAG, "RESTORED CLOCKED IN URI: " + clockedInUri.toString());
+        Log.e(LOG_TAG, "RETRIEVED SHIFTBUTTONBOOL VALUE: " + shiftButtonBool);
+    }
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(shiftBoolKey, shiftButtonBool);
+        Log.d(LOG_TAG, "shiftButtonBool value: " + shiftButtonBool);
     }
 
     @Override
@@ -80,13 +88,6 @@ public class Main2Activity extends AppCompatActivity
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable(uriParcelKey, clockedInUri);
-        outState.putBoolean(shiftBoolKey, shiftButtonBool);
-        Log.i(LOG_TAG, "SAVED CLOCKED IN URI: " + clockedInUri);
-    }
 
     // DateTime dateTime;
     @Override
@@ -101,8 +102,10 @@ public class Main2Activity extends AppCompatActivity
         if (adView != null) {
             adView.loadAd(adRequest);
         }
+        app = (TimeCardAnalytics) getApplication();
+        mTracker = app.getDefaultTracker();
 
-        // TODO: Put the login page button on the app drawer
+
         loginPageButton = (Button) findViewById(R.id.loginButton);
         final Intent intent = new Intent(Main2Activity.this, LoginActivity.class);
         loginPageButton.setOnClickListener(new View.OnClickListener() {
@@ -112,19 +115,6 @@ public class Main2Activity extends AppCompatActivity
 
             }
         });
-
-        app = (TimeCardAnalytics) getApplication();
-        mTracker = app.getDefaultTracker();
-
-/*        EditText rosterAppsEmail = (EditText) findViewById(R.id.rosterAppsEmail);
-        EditText rosterAppsPassword = (EditText) findViewById(R.id.rosterAppsPassword);
-        if (rosterAppsEmail != null ) {
-            rosterAppsEmail.setOnEditorActionListener(listener);
-            rosterAppsPassword.setOnEditorActionListener(listener);
-        }*/
-
-
-
         Button testLoginButton = (Button) findViewById(R.id.button);
         assert testLoginButton != null;
         testLoginButton.setOnClickListener(new View.OnClickListener() {
@@ -140,78 +130,48 @@ public class Main2Activity extends AppCompatActivity
         currentShiftHrsWrked = (TextView) findViewById(R.id.currentShiftHrsWrked);
         currentShiftGrossPay = (TextView) findViewById(R.id.currentShiftGrossPay);
 
+
+        // Gets the current status of being clocked in or not, if not the first time the app is run
+        /*SharedPreferences sharedPreferences = getSharedPreferences(this.getString(R.string
+                .clockin_sharedpref_file_key), Context.MODE_PRIVATE);
+        if (sharedPreferences.contains(this.getString(R.string.clockin_bool_sharedprefkey))) {
+            shiftButtonBool = sharedPreferences.getBoolean(
+                    Main2Activity.this.getString(R.string.clockin_bool_sharedprefkey), true);
+        }*/
+        // Listens for changes in status of being clocked in or not.
+
+        SharedPreferences sharedPreferences = getSharedPreferences(this.getString(R.string
+                .clockin_sharedpref_file_key), Context.MODE_PRIVATE);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(
+                shiftBoolChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+                    @Override
+                    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                        if (key == Main2Activity.this.getString(R.string.clockin_bool_sharedprefkey)) {
+                            shiftButtonBool = sharedPreferences.getBoolean(key, false);
+                        }
+                    }
+                });
+
         ToggleButton clockInClockOutButton = (ToggleButton) findViewById(R.id.ClockInClockOutid);
-
-        /* This is where clocking in and clocking out is handled.
-            user clocks in, the system records the current time and date, inserts it into a row using the
-            databasehandler class. it inserts:
-         * Current day
-         * Current Time in hh:mm format
-         * Current Time in UNIX format
-         * Current month
-         * Current day of week
-         * Current year
-         * Hourly Pay
-            into the row.
-            Then, a row URI is returned. This URI is used to clock out the user, and inserts the following data into
-            the same row:
-
-
-        */
-
-        /**
-         *  Upon clocking in, the UI should change to a view
-         *  showing the time clocked in,
-         *  how many hours worked in real time,
-         *  as well as how much money grossed.
-         *
-         *  POSSIBLE: implement the logic to grab the RosterApps data to compare the current shift worked
-         *  with what is scheduled on their RosterApps, and if it's a supervisor shift or not.
-         *  Also could implement the logic that any time worked over the RosterApps-scheduled/reported
-         *  shift is eligble for overtime,
-         *  as well as reminding the user to be extended on their rosterapps.
-         *
-         */
         if (clockInClockOutButton != null) {
+            clockInClockOutButton.setChecked(shiftButtonBool);
             clockInClockOutButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    shiftButtonBool = b;
-                    if (shiftButtonBool) {
+                    // TODO: RECONCILE THIS SHAREDPREF VARIABLE WITH THE MAIN2ACTIVITY PART
+                    if (!shiftButtonBool) {
                         Log.e(LOG_TAG, "CLOCKED IN! \n");
-                        ForegroundService.startClockIn(Main2Activity.this, DateTime.now(TimeZone.getDefault()), true);
-
+                        ForegroundService.startClockIn(Main2Activity.this, DateTime.now(TimeZone.getDefault()));
                         getSupportLoaderManager().initLoader(MAIN_ACT_LOADER_ID, null, Main2Activity.this);
-                    } else if (!shiftButtonBool) {
 
-                        Log.e(LOG_TAG, "CLOCKED OUT! \n");
-                        int numRowsUpdated = databaseHandler.clockOut(clockedInUri, DateTime.now(TimeZone.getDefault()));
-                        Log.i(LOG_TAG, "NUMBER OF ROWS UPDATED: " + numRowsUpdated);
-
-                        Cursor returnedUri = getContentResolver().query(clockedInUri, null, null, null, null);
-
-                        if (returnedUri != null) {
-                            returnedUri.moveToFirst();
-                            int columnTotal = returnedUri.getColumnCount();
-                            Log.i(LOG_TAG, "CLOCKED OUT CONTENTS OF MOST RECENT CLOCKED IN URI: " + DatabaseUtils.dumpCursorToString(returnedUri));
-                        }
-
-                        Cursor entireTable = getContentResolver().query(ShiftColumns.CONTENT_URI, null, null, null, null);
-
-                        if (entireTable != null) {
-                            entireTable.moveToFirst();
-                            Log.i(LOG_TAG, "ENTIRE CLOCKED OUT TABLE CURSOR: " + DatabaseUtils.dumpCursorToString(entireTable));
-
-                            entireTable.close();
-                        }
-
-
+                    } else if (shiftButtonBool) { // Clocking out.
+                        Log.e(LOG_TAG, "CLOCKED OUT");
+                        ForegroundService.startClockOut(Main2Activity.this, DateTime.now(TimeZone.getDefault()));
+                        getSupportLoaderManager().restartLoader(MAIN_ACT_LOADER_ID, null, Main2Activity.this);
                     }
                 }
             });
         }
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -242,7 +202,7 @@ public class Main2Activity extends AppCompatActivity
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data != null && data.moveToLast()) {
-            data.moveToLast();
+
             currentShiftStart.setText(getString(R.string.clockInTimeText) + data.getString(data.getColumnIndex(ShiftColumns.START_TIME_HHMM)));
             currentShiftEnd.setText(getString(R.string.clockOutTimeText) + data.getString(data.getColumnIndex(ShiftColumns.END_TIME_HHMM)));
             int month = data.getInt(data.getColumnIndex(ShiftColumns.MONTH_NAME));

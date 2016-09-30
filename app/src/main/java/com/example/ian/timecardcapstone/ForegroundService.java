@@ -21,6 +21,32 @@ import java.util.Locale;
 
 import hirondelle.date4j.DateTime;
 
+/** This is where clocking in and clocking out is handled.
+ user clocks in, the system records the current time and date, inserts it into a row using the
+ databasehandler class. it inserts:
+ * Current day
+ * Current Time in hh:mm format
+ * Current Time in UNIX format
+ * Current month
+ * Current day of week
+ * Current year
+ * Hourly Pay
+ into the row.
+ Then, a row URI is returned. This URI is used to clock out the user, and inserts the following data into
+ the same row:
+
+ *  Upon clocking in, the UI should change to a view
+ *  showing the time clocked in,
+ *  how many hours worked in real time,
+ *  as well as how much money grossed.
+ *
+ *  POSSIBLE: implement the logic to grab the RosterApps data to compare the current shift worked
+ *  with what is scheduled on their RosterApps, and if it's a supervisor shift or not.
+ *  Also could implement the logic that any time worked over the RosterApps-scheduled/reported
+ *  shift is eligble for overtime,
+ *  as well as reminding the user to be extended on their rosterapps.
+ *
+ */
 public class ForegroundService extends Service {
 
     // TODO: Refactor this class in the same style as the IntentService.
@@ -39,23 +65,28 @@ public class ForegroundService extends Service {
     public ForegroundService() {
     }
 
-    public static void startClockIn(Context context, DateTime clockedInTime, boolean clockInBool) {
+    public static void startClockIn(Context context, DateTime clockedInTime) {
+        boolean clockInBool = false;
         Intent intent = new Intent(context, ForegroundService.class);
         intent.setAction(ACTION_CLOCK_IN);
         intent.putExtra(EXTRA_CUR_CLOCKIN_DATETIME, clockedInTime);
         intent.putExtra(EXTRA_CLOCKED_BOOL_ID, clockInBool);
+
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.clockin_sharedpref_file_key),Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(context.getString(R.string.clockin_bool_sharedprefkey),clockInBool);
         editor.commit();
+
         context.startService(intent);
     }
 
-    public static void startClockOut(Context context, DateTime clockedOutTime, boolean clockOutBool) {
+    public static void startClockOut(Context context, DateTime clockedOutTime) {
+        boolean clockOutBool = true;
         Intent intent = new Intent(context, ForegroundService.class);
         intent.setAction(ACTION_CLOCK_OUT);
         intent.putExtra(EXTRA_CUR_CLOCKOUT_DATETIME, clockedOutTime);
         intent.putExtra(EXTRA_CLOCKED_BOOL_ID, clockOutBool);
+
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.clockin_sharedpref_file_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(context.getString(R.string.clockin_bool_sharedprefkey), clockOutBool);
@@ -88,19 +119,22 @@ public class ForegroundService extends Service {
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.clockin_sharedpref_file_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Uri clockInUri;
+        boolean clockInBool;
         if (intent != null) {
-            final String action = intent.getAction();
-            if (ACTION_CLOCK_IN.equals(action)) {
+            final String clockingIntentAction = intent.getAction();
+            if (ACTION_CLOCK_IN.equals(clockingIntentAction)) {
                 final DateTime currentClockInDateTime = (DateTime) intent.getSerializableExtra(EXTRA_CUR_CLOCKIN_DATETIME);
+                clockInBool = intent.getBooleanExtra(EXTRA_CLOCKED_BOOL_ID, true);
                 // Receives the URI from the clockIn operation, and saves it in the Shared Pref file for future use.
-                String clockInString = clockIn(currentClockInDateTime).toString();
+                String clockInString = clockIn(currentClockInDateTime,clockInBool).toString();
                 editor.putString(getString(R.string.clockin_uri_sharedprefkey),
                         clockInString);
                 editor.commit();
-            } else if (ACTION_CLOCK_OUT.equals(action)) {
+            } else if (ACTION_CLOCK_OUT.equals(clockingIntentAction)) {
                 final DateTime currentClockOutDateTime = (DateTime) intent.getSerializableExtra(EXTRA_CUR_CLOCKOUT_DATETIME);
+                clockInBool = intent.getBooleanExtra(EXTRA_CLOCKED_BOOL_ID, false);
                 clockInUri = Uri.parse(sharedPreferences.getString(getString(R.string.clockin_uri_sharedprefkey), null));
-                clockOut(clockInUri, currentClockOutDateTime);
+                clockOut(clockInUri, currentClockOutDateTime, clockInBool);
             }
         }
         return super.onStartCommand(intent, flags, startId);
@@ -116,23 +150,36 @@ public class ForegroundService extends Service {
      * Current year
      * Hourly Pay
      *
+     * This starts a foreground service and notification. When clocked in, the SharedPref clockedin boolean will be
+     * made true.
+     *
+     * It will be ongoing until the user clocks out, which stops the foreground service.
+     *
+     *
      * @param clockInTime The time in which the user clocked in at
      * @return The URI at which the clocked in data was inserted in
      */
-    public Uri clockIn(DateTime clockInTime) {
-        SharedPreferences sharedPreferences = getSharedPreferences(this.getString(R.string.clockin_sharedpref_file_key), Context.MODE_PRIVATE);
-        boolean userIsClockedIn;
-        if (sharedPreferences.contains(this.getString(R.string.clockin_bool_sharedprefkey))) {
-            userIsClockedIn = sharedPreferences.getBoolean(this.getString(R.string.clockin_bool_sharedprefkey),true);
-        } else {
-            throw new NullPointerException();
+    public Uri clockIn(DateTime clockInTime,boolean userIsClockedIn) {
+        SharedPreferences userSettingsPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        Float hourlyPayFloat = 11.25f;
+        try {
+            hourlyPayFloat = Float.valueOf(userSettingsPreferences.getString(mContext.getResources().getString(R.string.hourlyPay), "11.25"));
+        } catch (NumberFormatException exception) {
+            Log.e(LOG_TAG, exception.getMessage());
+            Toast.makeText(mContext, "Hourly pay is in invalid format", Toast.LENGTH_SHORT).show();
         }
-        if (userIsClockedIn) {
+        // TODO: RECONCILE THIS SHAREDPREF VARIABLE WITH THE MAIN2ACTIVITY PART
+
+        if (!userIsClockedIn) {
+            SharedPreferences sharedPreferences = mContext.getSharedPreferences(mContext.getString(R.string
+                    .clockin_sharedpref_file_key), Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(mContext.getString(R.string.clockin_bool_sharedprefkey), false);
+            editor.commit();
             // Builds the ongoing notification to keep the service running in the foreground.
             String formattedClockIntime = clockInTime.format("MM-DD-YYYY hh:mm", Locale.getDefault());
             Intent clockedInIntent = new Intent(this, Main2Activity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, clockedInIntent, 0);
-
             Notification.Builder builder = new Notification.Builder(this)
                     .setSmallIcon(R.drawable.perm_group_system_clock)
                     .setContentTitle("clocked in")
@@ -144,18 +191,7 @@ public class ForegroundService extends Service {
             this.startForeground(ONGOING_NOTIFICATION_ID, onGoingNotif);
 
             // Actually logs the current DateTime which the user clocks in at
-            SharedPreferences userSettingsPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-            Float hourlyPayFloat = 11.25f;
-
-            try {
-                hourlyPayFloat = Float.valueOf(userSettingsPreferences.getString(mContext.getResources().getString(R.string.hourlyPay), "11.25"));
-            } catch (NumberFormatException exception) {
-                Log.e(LOG_TAG, exception.getMessage());
-                Toast.makeText(mContext, "Hourly pay is in invalid format", Toast.LENGTH_SHORT).show();
-            }
-
             ShiftContentValues clockInValues = new ShiftContentValues();
-
             clockInValues.putDayOfMonth(clockInTime.getDay());
             clockInValues.putStartTimeHhmm(clockInTime.format("hh:mm"));
             clockInValues.putDayOfWeek(clockInTime.getWeekDay().toString());
@@ -167,7 +203,7 @@ public class ForegroundService extends Service {
 
             return mContext.getContentResolver().insert(ShiftColumns.CONTENT_URI, clockInValues.values());
         } else {
-            return null;
+            throw new AssertionError();
         }
     }
 
@@ -178,17 +214,24 @@ public class ForegroundService extends Service {
      * Number of hours worked is then figured out using the cursor mentioned above.
      * These number of hours worked are then inserted into the same row, along with the calculated gross pay.
      *
+     * Stops the foreground service, and sets the SharedPref clockout variable as false.
+     *
      * @param clockInUri    the URI that was originally used to clock in
      * @param clockOutTime  The time at which the user clocks out
      * @return number of columns that were updated.
      */
-    public int clockOut(Uri clockInUri, DateTime clockOutTime) {
-        ShiftContentValues clockOutValues = new ShiftContentValues();
+    public int clockOut(Uri clockInUri, DateTime clockOutTime, boolean clockedOutBool) {
+        Log.d(LOG_TAG, "IN CLOCK OUT METHOD");
+        SharedPreferences sharedPreferences = getSharedPreferences(this.getString(R.string.clockin_sharedpref_file_key),
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(getString(R.string.clockin_bool_sharedprefkey), clockedOutBool);
+        editor.commit();
 
+        ShiftContentValues clockOutValues = new ShiftContentValues();
         clockOutValues.putEndTimeHhmm(clockOutTime.format("hh:mm"));
         long unixTime = (System.currentTimeMillis() / 1000);
         clockOutValues.putEndTimeUnix((int) unixTime);
-        // TODO: calculate number of hours worked and gross pay based on the hourly pay
 
         Log.i(LOG_TAG, "CLOCKED IN CONTENT URI: " + clockInUri);
         mContext.getContentResolver().update(clockInUri, clockOutValues.values(), null, null);
@@ -197,18 +240,18 @@ public class ForegroundService extends Service {
         Cursor clockedOutCursor = mContext.getContentResolver().query(clockInUri,
                 new String[]{ShiftColumns.START_TIME_UNIX, ShiftColumns.END_TIME_UNIX, ShiftColumns.HOURLY_PAY}, null, null, null);
         float[] hoursWorkedAndGrossPay = numOfHoursWorked(clockedOutCursor);
-        Log.i(LOG_TAG, "NUMBER OF HOURS REPORTED WORKED FROM CALLED METHOD: " + hoursWorkedAndGrossPay[0] +
+        /*Log.i(LOG_TAG, "NUMBER OF HOURS REPORTED WORKED FROM CALLED METHOD: " + hoursWorkedAndGrossPay[0] +
                 "GROSS PAY IN ARRAY: " + hoursWorkedAndGrossPay[1] + " AND QURIED CURSOR: " +
-                DatabaseUtils.dumpCursorToString(clockedOutCursor));
-        ShiftContentValues secondClockOutValues = new ShiftContentValues();
-        secondClockOutValues.putNumHrsShift(hoursWorkedAndGrossPay[0]);
-        secondClockOutValues.putGrossPay(hoursWorkedAndGrossPay[1]);
-        // TODO: have this react to the shared preferences boolean
+                DatabaseUtils.dumpCursorToString(clockedOutCursor));*/
+
+        clockOutValues.putNumHrsShift(hoursWorkedAndGrossPay[0]);
+        clockOutValues.putGrossPay(hoursWorkedAndGrossPay[1]);
+
+
         this.stopForeground(true);
 
-        return mContext.getContentResolver().update(clockInUri, secondClockOutValues.values(), null, null);
+        return mContext.getContentResolver().update(clockInUri, clockOutValues.values(), null, null);
     }
-
 
     private float[] numOfHoursWorked(Cursor clockedOutCursor) {
         Log.i(LOG_TAG, "CURSOR BEING WORKED ON: " + DatabaseUtils.dumpCursorToString(clockedOutCursor));
@@ -225,5 +268,4 @@ public class ForegroundService extends Service {
         return new float[]{totalHoursWorked, calcGrossPay};
 
     }
-
 }
